@@ -1,6 +1,6 @@
 # O que é
 
-Servidor a listagem e manipulação de serviços e funcionários de uma clínica de cardiologia.
+Servidor para listagem e manipulação de serviços e funcionários de uma clínica de cardiologia.
 
 
 

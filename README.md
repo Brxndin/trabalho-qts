@@ -1,8 +1,6 @@
 # O que é
 
-Servidor para listagem e manipulação de serviços e funcionários de uma clínica de cardiologia.
-
-
+Servidor e Aplicativo para listagem e manipulação de serviços e funcionários de uma clínica de cardiologia.
 
 # Objetivo
 

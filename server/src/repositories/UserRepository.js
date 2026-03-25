@@ -4,11 +4,12 @@ import { User } from '../models/User.js';
 export class UserRepository {
     async findAll() {
         const rows = await knex('usuarios').select('*');
-        
-        return rows.map(row => new User({
+
+        return rows.map((row) => new User({
             id: row.id,
             nome: row.nome,
-            email: row.email
+            email: row.email,
+            tipo: row.tipo,
         }));
     }
 
@@ -22,7 +23,12 @@ export class UserRepository {
             return null;
         }
 
-        return new User(row);
+        return new User({
+            id: row.id,
+            nome: row.nome,
+            email: row.email,
+            tipo: row.tipo,
+        });
     }
 
     async create(userData) {
@@ -30,7 +36,8 @@ export class UserRepository {
             .insert({
                 nome: userData.nome,
                 email: userData.email,
-                senha: userData.senha
+                tipo: userData.tipo,
+                senha: userData.senha,
             });
 
         return id;

@@ -1,4 +1,4 @@
-import CustomError from "../../helpers/customError.js";
+import CustomError from "../helpers/customError.js";
 
 export class UserController {
     constructor(userRepository) {

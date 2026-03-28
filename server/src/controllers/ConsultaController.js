@@ -1,15 +1,15 @@
 import CustomError from '../helpers/customError.js';
 
-export class UsuarioController {
-    constructor(usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+export class ConsultaController {
+    constructor(consultaRepository) {
+        this.consultaRepository = consultaRepository;
     }
 
     index = async (req, res, next) => {
         try {
-            const usuarios = await this.usuarioRepository.findAll();
+            const consultas = await this.consultaRepository.findAll();
 
-            return res.status(200).json(usuarios);
+            return res.status(200).json(consultas);
         } catch (error) {
             next(error);
         }
@@ -18,13 +18,13 @@ export class UsuarioController {
     show = async (req, res, next) => {
         try {
             const { id } = req.params;
-            const usuario = await this.usuarioRepository.findById(id);
+            const consulta = await this.consultaRepository.findById(id);
 
-            if (!usuario) {
-                throw new CustomError('Usuário não encontrado.', 404);
+            if (!consulta) {
+                throw new CustomError('Consulta não encontrada.', 404);
             }
 
-            return res.status(200).json(usuario);
+            return res.status(200).json(consulta);
         } catch (error) {
             next(error);
         }
@@ -46,11 +46,11 @@ export class UsuarioController {
                 throw new CustomError('Informe ao menos um Tipo para o usuário!', 400);
             }
 
-            const userId = await this.usuarioRepository.create(req.body);
+            const userId = await this.consultaRepository.create(req.body);
 
             return res.status(201).json({
                 id: userId,
-                mensagem: 'Usuário criado com sucesso!',
+                mensagem: 'Consulta criada com sucesso!',
             });
         } catch (error) {
             next(error);

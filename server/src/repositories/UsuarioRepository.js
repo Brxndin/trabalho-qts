@@ -1,7 +1,7 @@
 import knex from '../config/knex.js';
 import { Usuario } from '../models/Usuario.js';
 
-export class UsarioRepository {
+export class UsuarioRepository {
     async findAll() {
         const usuarios = await knex('usuarios')
             .select(

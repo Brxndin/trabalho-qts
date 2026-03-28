@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import usersRoutes from './routes/UserRoutes.js';
+import usuarioRoutes from './routes/UsuarioRoutes.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 // cria o app com express e configura tratamento das requests
@@ -11,7 +11,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.use('/usuarios', usersRoutes);
+app.use('/usuarios', usuarioRoutes);
 
 // middleware para tratamento de erros
 app.use(errorHandler);

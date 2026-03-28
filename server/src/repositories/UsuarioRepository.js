@@ -14,7 +14,7 @@ export class UsuarioRepository {
             id: usuario.id,
             nome: usuario.nome,
             email: usuario.email,
-            tipos: usuario.tipos,
+            tipos: JSON.parse(usuario.tipos),
         }));
     }
 
@@ -36,7 +36,7 @@ export class UsuarioRepository {
             id: usuario.id,
             nome: usuario.nome,
             email: usuario.email,
-            tipos: usuario.tipos
+            tipos: JSON.parse(usuario.tipos)
         });
     }
 

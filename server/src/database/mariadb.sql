@@ -29,6 +29,15 @@ INSERT INTO usuarios_tipos
 (tipo, usuario_id)
 VALUES (1, 1);
 
+CREATE TABLE recuperacao_senhas(
+    id int primary key auto_increment,
+    token varchar(200) NOT NULL,
+    data_expiracao datetime NOT NULL,
+    usuario_id int NOT NULL,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
 CREATE TABLE medicos(
     id int primary key auto_increment,
     crm varchar(200) NOT NULL,

@@ -47,33 +47,62 @@ export class PacienteRepository {
     }
 
     async create(data) {
-        const [id] = await knex('pacientes')
-            .insert({
-                data_nascimento: data.dataNascimento,
-                usuario_id: data.usuarioId,
-            });
+        const id = await knex.transaction(async (trx) => {
+            const [usuarioId] = await trx('usuarios')
+                .insert({
+                    nome: data.nome,
+                    email: data.email,
+                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+                    // senha: data.senha,
+                    cpf: data.cpf,
+                    telefone: data.telefone,
+                });
+
+            const [medicoId] = await trx('pacientes')
+                .insert({
+                    data_nascimento: data.dataNascimento,
+                    usuario_id: usuarioId
+                });
+
+            return medicoId; 
+        });
 
         return id;
     }
 
-    // verificar a questão do id, pois terá que enviar, após atualizar o paciente, o id do usuário
-    // os dois compartilham dados, por isso é necessário ter
     async update(id, data) {
-        // verificar o que irá retornar
-        // talvez seja interessante retornar os campos modificados
-        await knex('pacientes')
-            .where('pacientes.id', id)
-            .update({
-                data_nascimento: data.dataNascimento
-            });
+        await knex.transaction(async (trx) => {
+            await trx('usuarios')
+                .join('pacientes', 'pacientes.usuario_id', 'usuarios.id')
+                .where('pacientes.id', id)
+                .update({
+                    nome: data.nome,
+                    email: data.email,
+                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+                    // senha: data.senha,
+                    // cpf deverá ter validação pra não duplicar
+                    cpf: data.cpf,
+                    telefone: data.telefone,
+                });
+
+            await trx('pacientes')
+                .where('pacientes.id', id)
+                .update({
+                    data_nascimento: data.dataNascimento,
+                });
+        });
     }
 
     // verificar a questão do id, pois terá que enviar, após excluir o paciente, o id do usuário
     // se não o usuário não será excluído
     // ele só poderá ser excluído se o paciente for o último tipo dele
     async delete(id) {
-        await knex('pacientes')
-            .where('pacientes.id', id)
-            .delete();
+        // aqui vai excluir o paciente com certeza, mas só vai excluir o usuário se ele tiver apenas um tipo restante
+        // se ele tiver mais de um tipo, deve continuar existindo
+        await knex.transaction(async (trx) => {
+            await trx('pacientes')
+                .where('pacientes.id', id)
+                .delete();
+        });
     }
 }

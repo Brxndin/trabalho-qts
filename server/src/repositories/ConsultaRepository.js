@@ -73,44 +73,50 @@ export class ConsultaRepository {
     }
 
     async create(data) {
-        const [id] = await knex('consultas')
-            .insert({
-                codigo: data.codigo,
-                data_hora_atendimento: data.dataHoraAtendimento,
-                paciente_id: data.pacienteId,
-                medico_id: data.medicoId,
-                descricao_sintomas: data.descricaoSintomas,
-                temperatura: data.temperatura,
-                peso: data.peso,
-                diagnostico_e_tratamento_sugerido: data.diagnosticoETratamentoSugerido,
-                status_pagamento: data.statusPagamento,
-            });
+        const consultaId = await knex.transaction(async (trx) => {
+            const [id] = await trx('consultas')
+                .insert({
+                    codigo: data.codigo,
+                    data_hora_atendimento: data.dataHoraAtendimento,
+                    paciente_id: data.pacienteId,
+                    medico_id: data.medicoId,
+                    descricao_sintomas: data.descricaoSintomas,
+                    temperatura: data.temperatura,
+                    peso: data.peso,
+                    diagnostico_e_tratamento_sugerido: data.diagnosticoETratamentoSugerido,
+                    status_pagamento: data.statusPagamento,
+                });
 
-        return id;
+            return id;
+        });
+
+        return consultaId;
     }
 
+    // verificar se vai manter isso pois, por regra, não pode editar consulta
     async update(id, data) {
         // verificar o que irá retornar
         // talvez seja interessante retornar os campos modificados
-        await knex('consultas')
-            .where('consultas.id', id)
-            .update({
-                data_hora_atendimento: data.dataHoraAtendimento,
-                descricao_sintomas: data.descricaoSintomas,
-                temperatura: data.temperatura,
-                peso: data.peso,
-                diagnostico_e_tratamento_sugerido: data.diagnosticoETratamentoSugerido,
-                status_pagamento: data.statusPagamento,
-            });
+        await knex.transaction(async (trx) => {
+            await trx('consultas')
+                .where('consultas.id', id)
+                .update({
+                    data_hora_atendimento: data.dataHoraAtendimento,
+                    descricao_sintomas: data.descricaoSintomas,
+                    temperatura: data.temperatura,
+                    peso: data.peso,
+                    diagnostico_e_tratamento_sugerido: data.diagnosticoETratamentoSugerido,
+                    status_pagamento: data.statusPagamento,
+                });
+        });
     }
 
-    // verificar pois só pode excluir o usuário se não tiver mais relações
-    // por exemplo: um usuário pode ser médico e paciente
-    // se eu excluir paciente, o usuário deve continuar existindo pois é médico também
-    // nesse caso, só vai excluir na tabela paciente E na tabela de tipos o tipo paciente pro usuário em questão
+    // verificar se vai manter isso pois, por regra, não pode remover consulta
     async delete(id) {
-        await knex('consultas')
-            .where('consultas.id', id)
-            .delete();
+        await knex.transaction(async (trx) => {
+            await trx('consultas')
+                .where('consultas.id', id)
+                .delete();
+        });
     }
 }

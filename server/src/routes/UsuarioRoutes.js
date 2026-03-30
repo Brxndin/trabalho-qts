@@ -1,6 +1,7 @@
 import express from 'express';
 import { UsuarioController } from '../controllers/UsuarioController.js';
 import { UsuarioRepository } from '../repositories/UsuarioRepository.js';
+import verifyJWT from '../middlewares/verifyJWT.js';
 
 const router = express.Router();
 
@@ -8,10 +9,10 @@ const router = express.Router();
 const usuarioRepository = new UsuarioRepository();
 const usuarioController = new UsuarioController(usuarioRepository);
 
-router.get('/', usuarioController.index);
-router.get('/:id', usuarioController.show);
-router.post('/', usuarioController.store);
-router.put('/:id', usuarioController.update);
-router.delete('/:id', usuarioController.delete);
+router.get('/', verifyJWT, usuarioController.index);
+router.get('/:id', verifyJWT, usuarioController.show);
+router.post('/', verifyJWT, usuarioController.store);
+router.put('/:id', verifyJWT, usuarioController.update);
+router.delete('/:id', verifyJWT, usuarioController.delete);
 
 export default router;

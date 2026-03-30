@@ -1,6 +1,7 @@
 import express from 'express';
 import { PacienteController } from '../controllers/PacienteController.js';
 import { PacienteRepository } from '../repositories/PacienteRepository.js';
+import verifyJWT from '../middlewares/verifyJWT.js';
 
 const router = express.Router();
 
@@ -8,10 +9,10 @@ const router = express.Router();
 const pacienteRepository = new PacienteRepository();
 const pacienteController = new PacienteController(pacienteRepository);
 
-router.get('/', pacienteController.index);
-router.get('/:id', pacienteController.show);
-router.post('/', pacienteController.store);
-router.put('/:id', pacienteController.update);
-router.delete('/:id', pacienteController.delete);
+router.get('/', verifyJWT, pacienteController.index);
+router.get('/:id', verifyJWT, pacienteController.show);
+router.post('/', verifyJWT, pacienteController.store);
+router.put('/:id', verifyJWT, pacienteController.update);
+router.delete('/:id', verifyJWT, pacienteController.delete);
 
 export default router;

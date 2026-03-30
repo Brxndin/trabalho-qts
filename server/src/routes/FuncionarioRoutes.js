@@ -1,6 +1,7 @@
 import express from 'express';
 import { FuncionarioController } from '../controllers/FuncionarioController.js';
 import { FuncionarioRepository } from '../repositories/FuncionarioRepository.js';
+import verifyJWT from '../middlewares/verifyJWT.js';
 
 const router = express.Router();
 
@@ -8,10 +9,10 @@ const router = express.Router();
 const funcionarioRepository = new FuncionarioRepository();
 const funcionarioController = new FuncionarioController(funcionarioRepository);
 
-router.get('/', funcionarioController.index);
-router.get('/:id', funcionarioController.show);
-router.post('/', funcionarioController.store);
-router.put('/:id', funcionarioController.update);
-router.delete('/:id', funcionarioController.delete);
+router.get('/', verifyJWT, funcionarioController.index);
+router.get('/:id', verifyJWT, funcionarioController.show);
+router.post('/', verifyJWT, funcionarioController.store);
+router.put('/:id', verifyJWT, funcionarioController.update);
+router.delete('/:id', verifyJWT, funcionarioController.delete);
 
 export default router;

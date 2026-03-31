@@ -102,26 +102,31 @@ export class MedicoRepository {
     }
 
     async update(id, data) {
+        const dadosFiltradosUsuario = filtraDadosPermitidos(data, {
+            nome: 'nome',
+            email: 'email',
+            // # to do
+            // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+            // senha: 'senha',
+            // cpf deverá ter validação pra não duplicar
+            cpf: 'cpf',
+            endereco: 'endereco',
+            telefone: 'telefone',
+        });
+
+        const dadosFiltradosMedico = filtraDadosPermitidos(data, {
+            crm: 'crm'
+        });
+
         await knex.transaction(async (trx) => {
             await trx('usuarios')
                 .join('medicos', 'medicos.usuario_id', 'usuarios.id')
                 .where('medicos.id', id)
-                .update({
-                    nome: data.nome,
-                    email: data.email,
-                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
-                    // senha: data.senha,
-                    // cpf deverá ter validação pra não duplicar
-                    cpf: data.cpf,
-                    endereco: data.endereco,
-                    telefone: data.telefone,
-                });
+                .update(dadosFiltradosUsuario);
 
             await trx('medicos')
                 .where('medicos.id', id)
-                .update({
-                    crm: data.crm,
-                });
+                .update(dadosFiltradosMedico);
         });
     }
 

@@ -63,18 +63,20 @@ export class UsuarioRepository {
     }
 
     async update(id, data) {
-        // verificar o que irá retornar
-        // talvez seja interessante retornar os campos modificados
-        await knex('usuarios')
-            .where('usuarios.id', id)
-            .update({
-                nome: data.nome,
-                email: data.email,
-                senha: data.senha,
-                cpf: data.cpf,
-                endereco: data.endereco,
-                telefone: data.telefone,
-            });
+        const dadosFiltrados = filtraDadosPermitidos(data, {
+            nome: 'nome',
+            email: 'email',
+            senha: 'senha',
+            cpf: 'cpf',
+            endereco: 'endereco',
+            telefone: 'telefone',
+        });
+
+        await knex.transaction(async (trx) => {
+            await trx('usuarios')
+                .where('usuarios.id', id)
+                .update(dadosFiltrados);
+        });
     }
 
     // verificar pois só pode excluir o usuário se não tiver mais relações

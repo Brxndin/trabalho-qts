@@ -101,26 +101,31 @@ export class FuncionarioRepository {
     }
 
     async update(id, data) {
+        const dadosFiltradosUsuario = filtraDadosPermitidos(data, {
+            nome: 'nome',
+            email: 'email',
+            // # to do
+            // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+            // senha: 'senha',
+            // cpf deverá ter validação pra não duplicar
+            cpf: 'cpf',
+            endereco: 'endereco',
+            telefone: 'telefone',
+        });
+
+        const dadosFiltradosFuncionario = filtraDadosPermitidos(data, {
+            funcao: 'funcao'
+        });
+
         await knex.transaction(async (trx) => {
             await trx('usuarios')
                 .join('funcionarios', 'funcionarios.usuario_id', 'usuarios.id')
                 .where('funcionarios.id', id)
-                .update({
-                    nome: data.nome,
-                    email: data.email,
-                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
-                    // senha: data.senha,
-                    // cpf deverá ter validação pra não duplicar
-                    cpf: data.cpf,
-                    endereco: data.endereco,
-                    telefone: data.telefone,
-                });
+                .update(dadosFiltradosUsuario);
 
             await trx('funcionarios')
                 .where('funcionarios.id', id)
-                .update({
-                    funcao: data.funcao,
-                });
+                .update(dadosFiltradosFuncionario);
         });
     }
 

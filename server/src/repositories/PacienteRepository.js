@@ -97,25 +97,34 @@ export class PacienteRepository {
     }
 
     async update(id, data) {
-        await knex.transaction(async (trx) => {
-            await trx('usuarios')
-                .join('pacientes', 'pacientes.usuario_id', 'usuarios.id')
-                .where('pacientes.id', id)
-                .update({
-                    nome: data.nome,
-                    email: data.email,
-                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
-                    // senha: data.senha,
-                    // cpf deverá ter validação pra não duplicar
-                    cpf: data.cpf,
-                    telefone: data.telefone,
-                });
+        const dadosFiltradosUsuario = filtraDadosPermitidos(data, {
+            nome: 'nome',
+            email: 'email',
+            // # to do
+            // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+            // senha: 'senha',
+            // cpf deverá ter validação pra não duplicar
+            cpf: 'cpf',
+            telefone: 'telefone'
+        });
 
-            await trx('pacientes')
-                .where('pacientes.id', id)
-                .update({
-                    data_nascimento: data.dataNascimento,
-                });
+        const dadosFiltradosPaciente = filtraDadosPermitidos(data, {
+            dataNascimento: 'data_nascimento'
+        });
+
+        await knex.transaction(async (trx) => {
+            if (Object.keys(dadosFiltradosUsuario).length > 0) {
+                await trx('usuarios')
+                    .join('pacientes', 'pacientes.usuario_id', 'usuarios.id')
+                    .where('pacientes.id', id)
+                    .update(dadosFiltradosUsuario);
+            }
+
+            if (Object.keys(dadosFiltradosPaciente).length > 0) {
+                await trx('pacientes')
+                    .where('pacientes.id', id)
+                    .update(dadosFiltradosPaciente);
+            }
         });
     }
 

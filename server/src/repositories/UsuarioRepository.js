@@ -1,5 +1,7 @@
 import knex from '../config/knex.js';
+import dayjs from 'dayjs';
 import { Usuario } from '../models/Usuario.js';
+import { filtraDadosPermitidos } from '../helpers/customValidators.js';
 
 export class UsuarioRepository {
     async findAll() {
@@ -79,17 +81,35 @@ export class UsuarioRepository {
         });
     }
 
-    // verificar pois só pode excluir o usuário se não tiver mais relações
-    // por exemplo: um usuário pode ser médico e paciente
-    // se eu excluir paciente, o usuário deve continuar existindo pois é médico também
-    // nesse caso, só vai excluir na tabela paciente E na tabela de tipos o tipo paciente pro usuário em questão
     async delete(id) {
-        await knex('usuarios_tipos')
-            .where('usuarios_tipos.usuario_id', id)
-            .delete();
+        await knex.transaction(async (trx) => {
+            // # to do
+            // verificar quais dados podem ser removidos e quais não
+            // isso por que, se não permitir remover consultas, da pra tirar daqui, mas terá que ter validação pra jogar um erro tratado
+            // se não for tratado, vai ir um erro de sql dizendo que o usuário ainda tem relação em tabelas
+            await trx('consultas')
+                .where('consultas.usuario_id', id)
+                .delete();
 
-        await knex('usuarios')
-            .where('usuarios.id', id)
-            .delete();
+            await trx('medicos')
+                .where('medicos.usuario_id', id)
+                .delete();
+
+            await trx('funcionarios')
+                .where('funcionarios.usuario_id', id)
+                .delete();
+
+            await trx('pacientes')
+                .where('pacientes.usuario_id', id)
+                .delete();
+
+            await trx('usuarios_tipos')
+                .where('usuarios_tipos.usuario_id', id)
+                .delete();
+
+            await trx('usuarios')
+                .where('usuarios.id', id)
+                .delete();
+        });
     }
 }

@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class FuncionarioController {
     constructor(funcionarioRepository) {
@@ -32,24 +33,18 @@ export class FuncionarioController {
 
     store = async (req, res, next) => {
         try {
-            const { nome, email, tipos, senha } = req.body;
+            const { nome, email, cpf, funcao } = req.body;
 
-            // necessário validar os tipos, que será um array
-            // esse array servirá para definir se vai criar médicos, funcionários ou pacientes
-            // ou seja, ao criar ou buscar o usuário, deverá consultar a tabela de ligação e colocar na model
-            // isso faz com que a model e a tabela no banco não dependam um do outro pois não tem a exata estrutura
-            if (!nome || !email || !senha) {
-                throw new CustomError('Nome, E-mail e Senha são obrigatórios!', 400);
+            if (!nome || !email || !cpf || !funcao) {
+                throw new CustomError('Nome, E-mail, CPF e Função são obrigatórios!', 400);
             }
 
-            if (tipos.length <= 0) {
-                throw new CustomError('Informe ao menos um Tipo para o usuário!', 400);
-            }
+            const [funcionarioId, emailCadastrado, token] = await this.funcionarioRepository.create(req.body);
 
-            const userId = await this.funcionarioRepository.create(req.body);
+            enviarEmailDefinicaoSenha(emailCadastrado, token);
 
             return res.status(201).json({
-                id: userId,
+                id: funcionarioId,
                 mensagem: 'Funcionário criado com sucesso!',
             });
         } catch (error) {

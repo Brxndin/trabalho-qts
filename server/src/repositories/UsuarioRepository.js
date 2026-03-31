@@ -38,6 +38,77 @@ export class UsuarioRepository {
             id: usuario.id,
             nome: usuario.nome,
             email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
+        });
+    }
+
+    async findByCPF(cpf) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+            )
+            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
+            .where('usuarios.cpf', cpf)
+            .first();
+
+        if (!usuario) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
+        });
+    }
+
+    async findByEmail(email) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+            )
+            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
+            .where('usuarios.email', email)
+            .first();
+
+        if (!usuario) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
+        });
+    }
+
+    async findByToken(token) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+            )
+            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
+            .join('recuperacao_senhas', 'recuperacao_senhas.usuario_id', 'usuarios.id')
+            .where('recuperacao_senhas.token', token)
+            .first();
+
+        if (!usuario) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
             tipos: JSON.parse(usuario.tipos)
         });
     }

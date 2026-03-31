@@ -1,5 +1,7 @@
 import knex from '../config/knex.js';
+import { filtraDadosPermitidos } from '../helpers/customValidators.js';
 import { Funcionario } from '../models/Funcionario.js';
+import { Usuario } from '../models/Usuario.js';
 
 export class FuncionarioRepository {
     async findAll() {
@@ -47,6 +49,29 @@ export class FuncionarioRepository {
             funcao: funcionario.funcao,
             telefone: funcionario.telefone,
             endereco: funcionario.endereco,
+        });
+    }
+
+    async findUsuarioByCPF(cpf) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+            )
+            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
+            .where('usuarios.cpf', cpf)
+            .first();
+
+        if (!usuario) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
         });
     }
 

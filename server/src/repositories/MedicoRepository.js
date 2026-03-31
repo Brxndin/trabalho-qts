@@ -1,5 +1,8 @@
+import dayjs from 'dayjs';
 import knex from '../config/knex.js';
 import { Medico } from '../models/Medico.js';
+import { Usuario } from '../models/Usuario.js';
+import { filtraDadosPermitidos } from '../helpers/customValidators.js';
 
 export class MedicoRepository {
     async findAll() {
@@ -47,6 +50,29 @@ export class MedicoRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+        });
+    }
+
+    async findUsuarioByCPF(cpf) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+            )
+            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
+            .where('usuarios.cpf', cpf)
+            .first();
+
+        if (!usuario) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
         });
     }
 

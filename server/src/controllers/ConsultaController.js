@@ -34,6 +34,7 @@ export class ConsultaController {
         try {
             const { nome, email, tipos, senha } = req.body;
 
+            // # to do
             // necessário validar os tipos, que será um array
             // esse array servirá para definir se vai criar médicos, funcionários ou pacientes
             // ou seja, ao criar ou buscar o usuário, deverá consultar a tabela de ligação e colocar na model
@@ -57,6 +58,8 @@ export class ConsultaController {
         }
     };
 
+    // # to do
+    // criar a lógica pra atualizar
     update = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
@@ -67,6 +70,8 @@ export class ConsultaController {
         }
     };
 
+    // # to do
+    // criar a lógica pra deletar
     delete = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);

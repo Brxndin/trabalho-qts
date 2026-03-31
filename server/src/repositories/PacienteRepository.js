@@ -128,10 +128,12 @@ export class PacienteRepository {
         });
     }
 
+    // # to do
     // verificar a questão do id, pois terá que enviar, após excluir o paciente, o id do usuário
     // se não o usuário não será excluído
     // ele só poderá ser excluído se o paciente for o último tipo dele
     async delete(id) {
+        // # to do
         // aqui vai excluir o paciente com certeza, mas só vai excluir o usuário se ele tiver apenas um tipo restante
         // se ele tiver mais de um tipo, deve continuar existindo
         await knex.transaction(async (trx) => {

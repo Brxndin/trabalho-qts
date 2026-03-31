@@ -52,6 +52,8 @@ export class MedicoController {
         }
     };
 
+    // # to do
+    // criar a lógica pra atualizar
     update = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
@@ -62,6 +64,8 @@ export class MedicoController {
         }
     };
 
+    // # to do
+    // criar a lógica pra deletar
     delete = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);

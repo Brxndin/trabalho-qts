@@ -41,7 +41,10 @@ export class FuncionarioController {
 
             const [funcionarioId, emailCadastrado, token] = await this.funcionarioRepository.create(req.body);
 
-            enviarEmailDefinicaoSenha(emailCadastrado, token);
+            // se não tem token o usuário já existe
+            if (token) {
+                enviarEmailDefinicaoSenha(emailCadastrado, token);
+            }
 
             return res.status(201).json({
                 id: funcionarioId,

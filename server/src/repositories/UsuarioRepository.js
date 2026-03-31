@@ -114,25 +114,38 @@ export class UsuarioRepository {
     }
 
     async create(data) {
-        const [id] = await knex('usuarios')
-            .insert({
-                nome: data.nome,
-                email: data.email,
-                senha: data.senha,
-                cpf: data.cpf,
-                endereco: data.endereco,
-                telefone: data.telefone,
+        const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
+            const [usuarioId] = await trx('usuarios')
+                .insert({
+                    nome: data.nome,
+                    email: data.email,
+                    senha: data.senha,
+                    cpf: data.cpf,
+                    endereco: data.endereco,
+                    telefone: data.telefone,
+                });
+
+            const tipos = data.tipos.map((tipo) => ({
+                usuario_id: usuarioId,
+                tipo: tipo
+            }));
+
+            await trx('usuarios_tipos').insert(tipos);
+
+            // token pra recuperação de senha ou primeiro acesso
+            const token = crypto.randomBytes(32).toString('hex');
+            
+            await trx('recuperacao_senhas').insert({
+                usuario_id: usuarioId,
+                token: token,
+                // data atual + 24 horas
+                data_expiracao: dayjs().add(1, 'day').format(),
             });
 
-        data.tipos.forEach(async (tipo) => {
-            await knex('usuarios_tipos')
-                .insert({
-                    usuario_id: id,
-                    tipo: tipo
-                });
+            return [usuarioId, data.email, token];
         });
 
-        return id;
+        return [id, emailCadastrado, token];
     }
 
     async update(id, data) {

@@ -76,28 +76,75 @@ export class FuncionarioRepository {
     }
 
     async create(data) {
-        const id = await knex.transaction(async (trx) => {
-            const [usuarioId] = await trx('usuarios')
-                .insert({
-                    nome: data.nome,
-                    email: data.email,
-                    // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
-                    // senha: data.senha,
-                    cpf: data.cpf,
-                    endereco: data.endereco,
-                    telefone: data.telefone,
+        // # to do
+        // deve validar se já não existe médico pro usuário informado
+        // isso garante que não duplique
+        const usuario = this.findUsuarioByCPF(data.cpf);
+
+        const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
+            let usuarioId = null;
+            let emailCadastrado = null;
+            let token = null;
+
+            if (!usuario) {
+                [usuarioId] = await trx('usuarios')
+                    .insert({
+                        nome: data.nome,
+                        email: data.email,
+                        // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+                        // senha: data.senha,
+                        cpf: data.cpf,
+                        endereco: data.endereco,
+                        telefone: data.telefone,
+                    });
+
+                await trx('usuarios_tipos')
+                    .insert({
+                        usuario_id: usuarioId,
+                        tipo: Usuario.tipos.FUNCIONARIO,
+                    });
+
+                // token pra recuperação de senha ou primeiro acesso
+                token = crypto.randomBytes(32).toString('hex');
+                
+                await trx('recuperacao_senhas').insert({
+                    usuario_id: usuarioId,
+                    token: token,
+                    // data atual + 24 horas
+                    data_expiracao: dayjs().add(1, 'day').format(),
                 });
 
-            const [medicoId] = await trx('funcionarios')
+                emailCadastrado = data.email;
+            } else {
+                // # to do
+                // verificar para validar os dados enviados semelhante à função de update
+                await trx('usuarios')
+                    .where('usuarios.id', usuario.id)
+                    .update({
+                        nome: data.nome,
+                        // # to do
+                        // verificar se e-mail e cpf podem ser alterados
+                        // talvez seja interessante o front bloquear a edição desses
+                        // email: data.email,
+                        // cpf: data.cpf,
+                        endereco: data.endereco,
+                        telefone: data.telefone,
+                    })
+
+                usuarioId = usuario.id;
+                emailCadastrado = usuario.email;
+            }
+                
+            const [funcionarioId] = await trx('funcionarios')
                 .insert({
                     funcao: data.funcao,
                     usuario_id: usuarioId
                 });
 
-            return medicoId; 
+            return [funcionarioId, emailCadastrado, token]; 
         });
 
-        return id;
+        return [id, emailCadastrado, token];
     }
 
     async update(id, data) {

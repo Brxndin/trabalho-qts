@@ -78,7 +78,7 @@ export class AuthController {
                 throw new CustomError('Erro ao buscar o usuário!', 400);
             }
 
-            const saltRounds = 10; 
+            const saltRounds = 12;
             
             const senhaCriptografada = await bcrypt.hash(senha, saltRounds);
 

@@ -20,13 +20,10 @@ CREATE TABLE usuarios_tipos(
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
--- # to do
--- seeder para usuário adm inicial
--- mudar a senha pra ser um hash que o bcrypt entenda
--- depois deixar um comentário aqui com a senha 12345678
+-- senha 12345678
 INSERT INTO usuarios
 (nome, email, senha, cpf, endereco, telefone)
-VALUES ('Administrador', 'admin@ifrs.edu.br', '123456', null, null, null);
+VALUES ('Administrador', 'admin@ifrs.edu.br', '$2a$12$zpCIf21cwAq.kO1.4bpdEekHjIVKiXhY7GW/JV7ugEeuemPTX49HG', null, null, null);
 
 INSERT INTO usuarios_tipos
 (tipo, usuario_id)

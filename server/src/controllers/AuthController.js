@@ -106,4 +106,29 @@ export class AuthController {
             next(error);
         }
     };
+
+    enviarEmailTrocaSenha = async (req, res, next) => {
+        try {
+            const { email } = req.body;
+
+            if (!email) {
+                throw new CustomError('É preciso informar o e-mail para definição de senha!', 400);
+            }
+
+            const usuario = await this.usuarioRepository.findByEmail(email);
+
+            if (!usuario) {
+                throw new CustomError('Erro ao buscar usuário com o e-mail informado!', 400);
+            }
+
+            // cria novo token e remove os antigos do mesmo usuário
+            const token = await this.usuarioRepository.createToken(usuario.id);
+
+            const mensagemRetorno = await enviarEmailDefinicaoSenha(usuario.email, token);
+
+            res.json({ mensagem: mensagemRetorno });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

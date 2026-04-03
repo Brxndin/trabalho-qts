@@ -1,7 +1,8 @@
-import knex from '../config/knex.js';
+import crypto from 'crypto';
 import dayjs from 'dayjs';
-import { Usuario } from '../models/Usuario.js';
+import knex from '../config/knex.js';
 import { filtraDadosPermitidos } from '../helpers/customValidators.js';
+import { Usuario } from '../models/Usuario.js';
 
 export class UsuarioRepository {
     async findAll() {

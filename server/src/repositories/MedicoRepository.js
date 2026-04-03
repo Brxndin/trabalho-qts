@@ -1,8 +1,9 @@
+import crypto from 'crypto';
 import dayjs from 'dayjs';
 import knex from '../config/knex.js';
+import { filtraDadosPermitidos } from '../helpers/customValidators.js';
 import { Medico } from '../models/Medico.js';
 import { Usuario } from '../models/Usuario.js';
-import { filtraDadosPermitidos } from '../helpers/customValidators.js';
 
 export class MedicoRepository {
     async findAll() {

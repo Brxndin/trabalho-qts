@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import dayjs from 'dayjs';
 import knex from '../config/knex.js';
 import { filtraDadosPermitidos } from '../helpers/customValidators.js';

@@ -30,7 +30,7 @@ export class UsuarioRepository {
             .where('usuarios.id', id)
             .first();
 
-        if (!usuario) {
+        if (!usuario || !usuario?.id) {
             return null;
         }
 
@@ -53,7 +53,7 @@ export class UsuarioRepository {
             .where('usuarios.cpf', cpf)
             .first();
 
-        if (!usuario) {
+        if (!usuario || !usuario?.id) {
             return null;
         }
 

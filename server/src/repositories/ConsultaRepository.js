@@ -51,7 +51,7 @@ export class ConsultaRepository {
             .where('consultas.id', id)
             .first();
 
-        if (!consulta) {
+        if (!consulta || !consulta?.id) {
             return null;
         }
 

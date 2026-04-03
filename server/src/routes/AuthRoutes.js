@@ -10,5 +10,6 @@ const authController = new AuthController(usuarioRepository);
 
 router.post('/login', authController.login);
 router.post('/definir-senha', authController.definirSenha);
+router.post('/enviar-email-troca-senha', authController.enviarEmailTrocaSenha);
 
 export default router;

@@ -157,6 +157,10 @@ export class UsuarioRepository {
                 .where('pacientes.usuario_id', id)
                 .delete();
 
+            await trx('recuperacao_senhas')
+                .where('recuperacao_senhas.usuario_id', id)
+                .delete();
+
             await trx('usuarios_tipos')
                 .where('usuarios_tipos.usuario_id', id)
                 .delete();

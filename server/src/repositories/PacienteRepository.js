@@ -36,7 +36,7 @@ export class PacienteRepository {
             .where('pacientes.id', id)
             .first();
 
-        if (!paciente) {
+        if (!paciente || !paciente?.id) {
             return null;
         }
 
@@ -49,17 +49,67 @@ export class PacienteRepository {
         });
     }
 
-    async findUsuarioByCPF(cpf) {
+    async findByCPF(cpf) {
+        const paciente = await knex('pacientes')
+            .select(
+                'pacientes.*',
+                'usuarios.nome',
+                'usuarios.cpf',
+                'usuarios.telefone',
+            )
+            .join('usuarios', 'usuarios.id', 'pacientes.usuario_id')
+            .where('usuarios.cpf', cpf)
+            .first();
+
+        if (!paciente || !paciente?.id) {
+            return null;
+        }
+
+        return new Paciente({
+            id: paciente.id,
+            nome: paciente.nome,
+            cpf: paciente.cpf,
+            dataNascimento: paciente.data_nascimento,
+            telefone: paciente.telefone,
+        });
+    }
+
+    async findByEmail(email) {
+        const paciente = await knex('pacientes')
+            .select(
+                'pacientes.*',
+                'usuarios.nome',
+                'usuarios.cpf',
+                'usuarios.telefone',
+            )
+            .join('usuarios', 'usuarios.id', 'pacientes.usuario_id')
+            .where('usuarios.email', email)
+            .first();
+
+        if (!paciente || !paciente?.id) {
+            return null;
+        }
+
+        return new Paciente({
+            id: paciente.id,
+            nome: paciente.nome,
+            cpf: paciente.cpf,
+            dataNascimento: paciente.data_nascimento,
+            telefone: paciente.telefone,
+        });
+    }
+
+    async findUsuarioByEmail(email) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
                 knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
             )
             .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
-            .where('usuarios.cpf', cpf)
+            .where('usuarios.email', email)
             .first();
 
-        if (!usuario) {
+        if (!usuario || !usuario?.id) {
             return null;
         }
 
@@ -73,10 +123,8 @@ export class PacienteRepository {
     }
 
     async create(data) {
-        // # to do
-        // deve validar se já não existe médico pro usuário informado
-        // isso garante que não duplique
-        const usuario = this.findUsuarioByCPF(data.cpf);
+        // verifica se já tem usuário com os dados informados
+        const usuario = await this.findUsuarioByEmail(data.email);
 
         const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
             let usuarioId = null;
@@ -138,7 +186,6 @@ export class PacienteRepository {
                     usuario_id: usuarioId
                 });
 
-            // verificar pois eu acho que vai ter que retornar o e-mail também
             return [pacienteId, emailCadastrado, token]; 
         });
 

@@ -38,7 +38,7 @@ export class FuncionarioRepository {
             .where('funcionarios.id', id)
             .first();
 
-        if (!funcionario) {
+        if (!funcionario || !funcionario?.id) {
             return null;
         }
 
@@ -52,17 +52,71 @@ export class FuncionarioRepository {
         });
     }
 
-    async findUsuarioByCPF(cpf) {
+    async findByCPF(cpf) {
+        const funcionario = await knex('funcionarios')
+            .select(
+                'funcionarios.*',
+                'usuarios.nome',
+                'usuarios.cpf',
+                'usuarios.telefone',
+                'usuarios.endereco',
+            )
+            .join('usuarios', 'usuarios.id', 'funcionarios.usuario_id')
+            .where('usuarios.cpf', cpf)
+            .first();
+
+        if (!funcionario || !funcionario?.id) {
+            return null;
+        }
+
+        return new Funcionario({
+            id: funcionario.id,
+            nome: funcionario.nome,
+            cpf: funcionario.cpf,
+            funcao: funcionario.funcao,
+            telefone: funcionario.telefone,
+            endereco: funcionario.endereco,
+        });
+    }
+
+    async findByEmail(email) {
+        const funcionario = await knex('funcionarios')
+            .select(
+                'funcionarios.*',
+                'usuarios.nome',
+                'usuarios.cpf',
+                'usuarios.telefone',
+                'usuarios.endereco',
+            )
+            .join('usuarios', 'usuarios.id', 'funcionarios.usuario_id')
+            .where('usuarios.email', email)
+            .first();
+
+        if (!funcionario || !funcionario?.id) {
+            return null;
+        }
+
+        return new Funcionario({
+            id: funcionario.id,
+            nome: funcionario.nome,
+            cpf: funcionario.cpf,
+            funcao: funcionario.funcao,
+            telefone: funcionario.telefone,
+            endereco: funcionario.endereco,
+        });
+    }
+
+    async findUsuarioByEmail(email) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
                 knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
             )
             .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
-            .where('usuarios.cpf', cpf)
+            .where('usuarios.email', email)
             .first();
 
-        if (!usuario) {
+        if (!usuario || !usuario?.id) {
             return null;
         }
 
@@ -76,10 +130,8 @@ export class FuncionarioRepository {
     }
 
     async create(data) {
-        // # to do
-        // deve validar se já não existe médico pro usuário informado
-        // isso garante que não duplique
-        const usuario = this.findUsuarioByCPF(data.cpf);
+        // verifica se já tem usuário com os dados informados
+        const usuario = await this.findUsuarioByEmail(data.email);
 
         const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
             let usuarioId = null;

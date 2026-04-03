@@ -39,6 +39,19 @@ export class PacienteController {
                 throw new CustomError('Nome, E-mail, CPF e Data de Nascimento são obrigatórios!', 400);
             }
 
+            // valida se já há paciente com esse email e cpf
+            let paciente = await this.pacienteRepository.findByCPF(cpf);
+
+            if (paciente) {
+                throw new CustomError('Já existe um paciente com o CPF informado!', 400);
+            }
+
+            paciente = await this.pacienteRepository.findByEmail(email);
+
+            if (paciente) {
+                throw new CustomError('Já existe um paciente com o E-mail informado!', 400);
+            }
+
             const [pacienteId, emailCadastrado, token] = await this.pacienteRepository.create(req.body);
 
             // se não tem token o usuário já existe

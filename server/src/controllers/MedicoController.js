@@ -39,6 +39,19 @@ export class MedicoController {
                 throw new CustomError('Nome, E-mail, CPF e CRM são obrigatórios!', 400);
             }
 
+            // valida se já há médico com esse email e cpf
+            let medico = await this.medicoRepository.findByCPF(cpf);
+
+            if (medico) {
+                throw new CustomError('Já existe um médico com o CPF informado!', 400);
+            }
+
+            medico = await this.medicoRepository.findByEmail(email);
+
+            if (medico) {
+                throw new CustomError('Já existe um médico com o E-mail informado!', 400);
+            }
+
             const [medicoId, emailCadastrado, token] = await this.medicoRepository.create(req.body);
 
             // se não tem token o usuário já existe

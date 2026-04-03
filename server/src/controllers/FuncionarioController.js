@@ -39,6 +39,19 @@ export class FuncionarioController {
                 throw new CustomError('Nome, E-mail, CPF e Função são obrigatórios!', 400);
             }
 
+            // valida se já há funcionario com esse email e cpf
+            let funcionario = await this.funcionarioRepository.findByCPF(cpf);
+
+            if (funcionario) {
+                throw new CustomError('Já existe um funcionário com o CPF informado!', 400);
+            }
+
+            funcionario = await this.funcionarioRepository.findByEmail(email);
+
+            if (funcionario) {
+                throw new CustomError('Já existe um funcionário com o E-mail informado!', 400);
+            }
+
             const [funcionarioId, emailCadastrado, token] = await this.funcionarioRepository.create(req.body);
 
             // se não tem token o usuário já existe

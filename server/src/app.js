@@ -6,6 +6,7 @@ import medicoRoutes from './routes/MedicoRoutes.js';
 import funcionarioRoutes from './routes/FuncionarioRoutes.js';
 import pacienteRoutes from './routes/PacienteRoutes.js';
 import consultaRoutes from './routes/ConsultaRoutes.js';
+import authRoutes from './routes/AuthRoutes.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 // cria o app com express e configura tratamento das requests
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
+app.use('/auth', authRoutes);
 app.use('/usuarios', usuarioRoutes);
 app.use('/medicos', medicoRoutes);
 app.use('/funcionarios', funcionarioRoutes);

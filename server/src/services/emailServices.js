@@ -7,9 +7,6 @@ export async function enviarEmailDefinicaoSenha(email, token) {
     // quando tiver o front, alterar
     const link = `http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/criar-senha?token=${token}`;
 
-    // # to do
-    // após validar a senha OU o token expirar, importante apagar da tabela de recuperação de senhas
-
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
         port: parseInt(process.env.MAIL_PORT, 10),
@@ -32,9 +29,9 @@ export async function enviarEmailDefinicaoSenha(email, token) {
             <p>Para criar sua senha de acesso, clique no link abaixo:</p>
             <a href="${link}" style="color: #007bff; font-weight: bold; text-decoration: none;">Definir minha senha</a>
             <br><br>
-            <small>Atenção: Este link expira em 24 horas a partir da data de envio do e-mail.</small>
+            <small>Atenção: Este link expira em 24 horas a partir da data de envio do e-mail. Além disso, ele não será mais válido se forem feitas novas tentativas de recuperação da senha.</small>
         `,
     });
 
-    return 'E-mail enviado! Verifique em http://localhost:8025';
+    return 'E-mail para definir a senha enviado! Verifique em http://localhost:8025';
 }

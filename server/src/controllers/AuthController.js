@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import CustomError from '../helpers/customError.js';
+import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
+import dayjs from 'dayjs';
 
 export class AuthController {
     constructor(usuarioRepository) {
@@ -68,11 +70,23 @@ export class AuthController {
             }
 
             // # to do
-            // aqui é necessário validar a data de expiração do token
-            // a função removeToken aceita tanto usuarioId quanto token, então se o token venceu, é só mandar ele que rmove
-            // depois, dar um throw falando que o token expirou
-            // verificar se o transaction do knex funciona mesmo com o throw posterior, mas na teoria sim, pois ele termina a transaction
-            const usuario = this.usuarioRepository.findByToken(token);
+            // verificar sobre o dado retornado, pois não está num objeto, é só o json que vem direito do banco
+            // ou seja, não retorna uma model igual os outros
+            const tokenEncontrado = await this.usuarioRepository.findToken(token);
+
+            if (!tokenEncontrado) {
+                throw new CustomError('O token informado está incorreto ou não existe mais!', 400);
+            }
+
+            const dataExpiracao = dayjs(tokenEncontrado.data_expiracao);
+
+            if (dataExpiracao.isBefore(dayjs())) {
+                await this.usuarioRepository.deleteToken(token);
+
+                throw new CustomError('O token informado já expirou!', 400);
+            }
+
+            const usuario = await this.usuarioRepository.findById(tokenEncontrado.usuario_id);
 
             if (!usuario) {
                 throw new CustomError('Erro ao buscar o usuário!', 400);
@@ -84,7 +98,8 @@ export class AuthController {
 
             await this.usuarioRepository.update(usuario.id, { senha: senhaCriptografada });
 
-            await this.usuarioRepository.removeToken(token);
+            // remove todos os tokens do usuário, mesmo que estejam ativos
+            await this.usuarioRepository.deleteTokenByUsuario(usuario.id);
 
             res.json({ mensagem: 'Senha definida com sucesso!' });
         } catch (error) {

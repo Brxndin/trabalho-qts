@@ -110,14 +110,7 @@ export class UsuarioRepository {
             await trx('usuarios_tipos').insert(tipos);
 
             // token pra recuperação de senha ou primeiro acesso
-            const token = crypto.randomBytes(32).toString('hex');
-            
-            await trx('recuperacao_senhas').insert({
-                usuario_id: usuarioId,
-                token: token,
-                // data atual + 24 horas
-                data_expiracao: dayjs().add(1, 'day').format(),
-            });
+            const token = await this.createToken(usuarioId, trx);
 
             return [usuarioId, data.email, token];
         });
@@ -170,6 +163,70 @@ export class UsuarioRepository {
 
             await trx('usuarios')
                 .where('usuarios.id', id)
+                .delete();
+        });
+    }
+
+    async findToken(token) {
+        const tokenEncontrado = await knex('recuperacao_senhas')
+            .select(
+                'recuperacao_senhas.*',
+            )
+            .where('recuperacao_senhas.token', token)
+            .first();
+
+        if (!tokenEncontrado || !tokenEncontrado?.id) {
+            return null;
+        }
+
+        return tokenEncontrado;
+    }
+
+    // token pra recuperação de senha ou primeiro acesso
+    async createToken(usuarioId, trx = null) {
+        const token = crypto.randomBytes(32).toString('hex');
+
+        const transacao = trx || knex;
+
+        await transacao.transaction(async (subTrx) => {
+            // remove tokens anteriores
+            await this.deleteTokenByUsuario(usuarioId, subTrx);
+
+            // cria novo token
+            await subTrx('recuperacao_senhas').insert({
+                    usuario_id: usuarioId,
+                    token: token,
+                    // data atual + 24 horas
+                    data_expiracao: dayjs().add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                });
+        });
+
+        return token;
+    }
+
+    async deleteToken(token) {
+        await knex.transaction(async (trx) => {
+            await trx('recuperacao_senhas')
+                .where('recuperacao_senhas.token', token)
+                // remove os tokens que já expiraram e que são do mesmo usuário do token atual
+                .orWhereRaw(`(
+                    recuperacao_senhas.usuario_id = (
+                        SELECT sub_recuperacao_senhas.usuario_id
+                        FROM recuperacao_senhas as sub_recuperacao_senhas
+                        WHERE sub_recuperacao_senhas.token = ${token}
+                    )
+                    AND recuperacao_senhas.data_expiracao < NOW()
+                )`)
+                .delete();
+        });
+    }
+
+    async deleteTokenByUsuario(usuarioId, trx = null) {
+        const transacao = trx || knex;
+
+        await transacao.transaction(async (subTrx) => {
+            await subTrx('recuperacao_senhas')
+                .where('recuperacao_senhas.usuario_id', usuarioId)
                 .delete();
         });
     }

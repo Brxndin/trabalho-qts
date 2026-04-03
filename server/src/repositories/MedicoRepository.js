@@ -159,14 +159,7 @@ export class MedicoRepository {
                     });
 
                 // token pra recuperação de senha ou primeiro acesso
-                token = crypto.randomBytes(32).toString('hex');
-                
-                await trx('recuperacao_senhas').insert({
-                    usuario_id: usuarioId,
-                    token: token,
-                    // data atual + 24 horas
-                    data_expiracao: dayjs().add(1, 'day').format(),
-                });
+                token = await this.createToken(usuarioId, trx);
 
                 emailCadastrado = data.email;
             } else {
@@ -241,6 +234,38 @@ export class MedicoRepository {
         await knex.transaction(async (trx) => {
             await trx('medicos')
                 .where('medicos.id', id)
+                .delete();
+        });
+    }
+
+    // token pra recuperação de senha ou primeiro acesso
+    async createToken(usuarioId, trx = null) {
+        const token = crypto.randomBytes(32).toString('hex');
+
+        const transacao = trx || knex;
+
+        await transacao.transaction(async (subTrx) => {
+            // remove tokens anteriores
+            await this.deleteTokenByUsuario(usuarioId, subTrx);
+
+            // cria novo token
+            await subTrx('recuperacao_senhas').insert({
+                    usuario_id: usuarioId,
+                    token: token,
+                    // data atual + 24 horas
+                    data_expiracao: dayjs().add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                });
+        });
+
+        return token;
+    }
+
+    async deleteTokenByUsuario(usuarioId, trx = null) {
+        const transacao = trx || knex;
+
+        await transacao.transaction(async (subTrx) => {
+            await subTrx('recuperacao_senhas')
+                .where('recuperacao_senhas.usuario_id', usuarioId)
                 .delete();
         });
     }

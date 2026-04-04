@@ -13,7 +13,12 @@ import errorHandler from './middlewares/errorHandler.js';
 // cria o app com express e configura tratamento das requests
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    // origin: 'https://rota-front.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(helmet());
 app.use(express.json());
 

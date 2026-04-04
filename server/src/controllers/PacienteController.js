@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class PacienteController {
@@ -10,7 +11,9 @@ export class PacienteController {
         try {
             const pacientes = await this.pacienteRepository.findAll();
 
-            return res.status(200).json(pacientes);
+            return customSuccess(res, {
+                data: pacientes,
+            });
         } catch (error) {
             next(error);
         }
@@ -25,7 +28,9 @@ export class PacienteController {
                 throw new CustomError('Paciente não encontrado.', 404);
             }
 
-            return res.status(200).json(paciente);
+            return customSuccess(res, {
+                data: paciente,
+            });
         } catch (error) {
             next(error);
         }
@@ -59,11 +64,12 @@ export class PacienteController {
                 enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
-            return res.status(201).json({
+            return customSuccess(res, {
                 message: 'Paciente criado com sucesso!',
                 data: {
                     id: pacienteId,
                 },
+                statusCode: 201,
             });
         } catch (error) {
             next(error);

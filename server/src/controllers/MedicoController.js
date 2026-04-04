@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class MedicoController {
@@ -10,7 +11,9 @@ export class MedicoController {
         try {
             const medicos = await this.medicoRepository.findAll();
 
-            return res.status(200).json(medicos);
+            return customSuccess(res, {
+                data: medicos,
+            });
         } catch (error) {
             next(error);
         }
@@ -25,7 +28,9 @@ export class MedicoController {
                 throw new CustomError('Médico não encontrado.', 404);
             }
 
-            return res.status(200).json(medico);
+            return customSuccess(res, {
+                data: medico,
+            });
         } catch (error) {
             next(error);
         }
@@ -59,11 +64,12 @@ export class MedicoController {
                 enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
-            return res.status(201).json({
+            return customSuccess(res, {
                 message: 'Médico criado com sucesso!',
                 data: {
                     id: medicoId,
                 },
+                statusCode: 201,
             });
         } catch (error) {
             next(error);

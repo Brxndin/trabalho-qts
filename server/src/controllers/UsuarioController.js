@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
 
 export class UsuarioController {
     constructor(usuarioRepository) {
@@ -9,7 +10,9 @@ export class UsuarioController {
         try {
             const usuarios = await this.usuarioRepository.findAll();
 
-            return res.status(200).json(usuarios);
+            return customSuccess(res, {
+                data: usuarios,
+            });
         } catch (error) {
             next(error);
         }
@@ -24,7 +27,9 @@ export class UsuarioController {
                 throw new CustomError('Usuário não encontrado.', 404);
             }
 
-            return res.status(200).json(usuario);
+            return customSuccess(res, {
+                data: usuario,
+            });
         } catch (error) {
             next(error);
         }
@@ -48,11 +53,12 @@ export class UsuarioController {
 
             const userId = await this.usuarioRepository.create(req.body);
 
-            return res.status(201).json({
+            return customSuccess(res, {
                 message: 'Usuário criado com sucesso!',
                 data: {
                     id: userId,
                 },
+                statusCode: 201,
             });
         } catch (error) {
             next(error);

@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class FuncionarioController {
@@ -10,7 +11,9 @@ export class FuncionarioController {
         try {
             const funcionarios = await this.funcionarioRepository.findAll();
 
-            return res.status(200).json(funcionarios);
+            return customSuccess(res, {
+                data: funcionarios
+            });
         } catch (error) {
             next(error);
         }
@@ -25,7 +28,9 @@ export class FuncionarioController {
                 throw new CustomError('Funcionário não encontrado.', 404);
             }
 
-            return res.status(200).json(funcionario);
+            return customSuccess(res, {
+                data: funcionario,
+            });
         } catch (error) {
             next(error);
         }
@@ -59,11 +64,12 @@ export class FuncionarioController {
                 enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
-            return res.status(201).json({
+            return customSuccess(res, {
                 message: 'Funcionário criado com sucesso!',
                 data: {
                     id: funcionarioId,
                 },
+                statusCode: 201,
             });
         } catch (error) {
             next(error);

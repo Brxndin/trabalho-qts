@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import CustomError from '../helpers/customError.js';
-import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 import dayjs from 'dayjs';
+import jwt from 'jsonwebtoken';
+import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
+import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class AuthController {
     constructor(usuarioRepository) {
@@ -45,11 +46,13 @@ export class AuthController {
                 expiresIn: '1h',
             });
 
-            res.status(200).json({
+            return customSuccess(res, {
                 message: 'Login efetuado com sucesso!',
-                auth: true,
-                user: payload,
-                token: token
+                data: {
+                    auth: true,
+                    user: payload,
+                    token: token,
+                },
             });
         } catch (error) {
             error.auth = false;
@@ -101,7 +104,9 @@ export class AuthController {
             // remove todos os tokens do usuário, mesmo que estejam ativos
             await this.usuarioRepository.deleteTokenByUsuario(usuario.id);
 
-            res.json({ message: 'Senha definida com sucesso!' });
+            return customSuccess(res, {
+                message: 'Senha definida com sucesso!',
+            });
         } catch (error) {
             next(error);
         }
@@ -126,7 +131,9 @@ export class AuthController {
 
             const mensagemRetorno = await enviarEmailDefinicaoSenha(usuario.email, token);
 
-            res.json({ message: mensagemRetorno });
+            return customSuccess(res, {
+                message: mensagemRetorno
+            });
         } catch (error) {
             next(error);
         }

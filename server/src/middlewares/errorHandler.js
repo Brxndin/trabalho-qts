@@ -1,6 +1,6 @@
 function errorHandler(error, req, res, next) {
     try {
-        const status = error.status || error.statusCode || 500;
+        const status = error.status ?? error.statusCode ?? 500;
 
         // temporário, verificar pra depois colocar logs estruturados
         console.log(error);
@@ -8,7 +8,9 @@ function errorHandler(error, req, res, next) {
         // resposta padrão para caso de erro na request
         const responseBody = {
             message: 'Ocorreu um erro interno no servidor. Tente novamente mais tarde ou contate o suporte.',
-            // requestId: req.requestId,
+            // data: {
+            //     requestId: req.requestId,
+            // },
         };
 
         // só mostra mensagem do erro se não for erro de sintaxe ou de servidor
@@ -17,7 +19,10 @@ function errorHandler(error, req, res, next) {
         }
 
         if ('auth' in error) {
-            responseBody.auth = error.auth;
+            responseBody.data = {
+                // ...responseBody.data,
+                auth: error.auth,
+            };
         }
 
         res.status(status).json(responseBody);

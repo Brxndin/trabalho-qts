@@ -1,4 +1,3 @@
-
 function errorHandler(error, req, res, next) {
     const status = error.status || error.statusCode || 500;
 

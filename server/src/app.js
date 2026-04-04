@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import usuarioRoutes from './routes/UsuarioRoutes.js';
 import medicoRoutes from './routes/MedicoRoutes.js';
@@ -16,12 +17,25 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.use('/usuarios', usuarioRoutes);
-app.use('/medicos', medicoRoutes);
-app.use('/funcionarios', funcionarioRoutes);
-app.use('/pacientes', pacienteRoutes);
-app.use('/consultas', consultaRoutes);
+// limita o número de requisições por IP
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 100,
+    max: 5,
+    message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.',
+});
+
+const normalLimiter = rateLimit({
+    windowMs: 15 * 60 * 100,
+    max: 500,
+    message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.',
+});
+
+app.use('/auth', authLimiter, authRoutes);
+app.use('/usuarios', normalLimiter, usuarioRoutes);
+app.use('/medicos', normalLimiter, medicoRoutes);
+app.use('/funcionarios', normalLimiter, funcionarioRoutes);
+app.use('/pacientes', normalLimiter, pacienteRoutes);
+app.use('/consultas', normalLimiter, consultaRoutes);
 
 // middleware para tratamento de erros
 app.use(errorHandler);

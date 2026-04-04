@@ -49,8 +49,10 @@ export class UsuarioController {
             const userId = await this.usuarioRepository.create(req.body);
 
             return res.status(201).json({
-                id: userId,
-                mensagem: 'Usuário criado com sucesso!',
+                message: 'Usuário criado com sucesso!',
+                data: {
+                    id: userId,
+                },
             });
         } catch (error) {
             next(error);

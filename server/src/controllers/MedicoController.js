@@ -60,8 +60,10 @@ export class MedicoController {
             }
 
             return res.status(201).json({
-                id: medicoId,
-                mensagem: 'Médico criado com sucesso!',
+                message: 'Médico criado com sucesso!',
+                data: {
+                    id: medicoId,
+                },
             });
         } catch (error) {
             next(error);

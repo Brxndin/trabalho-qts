@@ -101,7 +101,7 @@ export class AuthController {
             // remove todos os tokens do usuário, mesmo que estejam ativos
             await this.usuarioRepository.deleteTokenByUsuario(usuario.id);
 
-            res.json({ mensagem: 'Senha definida com sucesso!' });
+            res.json({ message: 'Senha definida com sucesso!' });
         } catch (error) {
             next(error);
         }
@@ -126,7 +126,7 @@ export class AuthController {
 
             const mensagemRetorno = await enviarEmailDefinicaoSenha(usuario.email, token);
 
-            res.json({ mensagem: mensagemRetorno });
+            res.json({ message: mensagemRetorno });
         } catch (error) {
             next(error);
         }

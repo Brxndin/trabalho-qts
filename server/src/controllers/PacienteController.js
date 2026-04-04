@@ -60,8 +60,10 @@ export class PacienteController {
             }
 
             return res.status(201).json({
-                id: pacienteId,
-                mensagem: 'Paciente criado com sucesso!',
+                message: 'Paciente criado com sucesso!',
+                data: {
+                    id: pacienteId,
+                },
             });
         } catch (error) {
             next(error);

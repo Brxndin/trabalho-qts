@@ -60,8 +60,10 @@ export class FuncionarioController {
             }
 
             return res.status(201).json({
-                id: funcionarioId,
-                mensagem: 'Funcionário criado com sucesso!',
+                message: 'Funcionário criado com sucesso!',
+                data: {
+                    id: funcionarioId,
+                },
             });
         } catch (error) {
             next(error);

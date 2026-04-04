@@ -190,7 +190,7 @@ export class UsuarioRepository {
     async createToken(usuarioId, trx = null) {
         const token = crypto.randomBytes(32).toString('hex');
 
-        const transacao = trx || knex;
+        const transacao = trx ?? knex;
 
         await transacao.transaction(async (subTrx) => {
             // remove tokens anteriores
@@ -228,7 +228,7 @@ export class UsuarioRepository {
     }
 
     async deleteTokenByUsuario(usuarioId, trx = null) {
-        const transacao = trx || knex;
+        const transacao = trx ?? knex;
 
         await transacao.transaction(async (subTrx) => {
             await subTrx('recuperacao_senhas')

@@ -213,14 +213,16 @@ export class UsuarioRepository {
             await trx('recuperacao_senhas')
                 .where('recuperacao_senhas.token', token)
                 // remove os tokens que já expiraram e que são do mesmo usuário do token atual
-                .orWhereRaw(`(
-                    recuperacao_senhas.usuario_id = (
-                        SELECT sub_recuperacao_senhas.usuario_id
-                        FROM recuperacao_senhas as sub_recuperacao_senhas
-                        WHERE sub_recuperacao_senhas.token = ${token}
-                    )
-                    AND recuperacao_senhas.data_expiracao < NOW()
-                )`)
+                .orWhere(function () {
+                    this
+                        .where('recuperacao_senhas.usuario_id', function () {
+                            this
+                                .select('sub_recuperacao_senhas.usuario_id')
+                                .from('recuperacao_senhas as sub_recuperacao_senhas')
+                                .where('sub_recuperacao_senhas.token', token)
+                        })
+                        .where('recuperacao_senhas.data_expiracao', '<', trx.fn.now());
+                })
                 .delete();
         });
     }

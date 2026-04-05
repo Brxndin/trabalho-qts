@@ -1,5 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class FuncionarioController {
@@ -59,13 +60,15 @@ export class FuncionarioController {
 
             const [funcionarioId, emailCadastrado, token] = await this.funcionarioRepository.create(req.body);
 
+            let mensagemEmail = null;
+
             // se não tem token o usuário já existe
             if (token) {
-                enviarEmailDefinicaoSenha(emailCadastrado, token);
+                mensagemEmail = await enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
             return customSuccess(res, {
-                message: 'Funcionário criado com sucesso!',
+                message: multiConcat(' ', 'Funcionário criado com sucesso!', mensagemEmail),
                 data: {
                     id: funcionarioId,
                 },

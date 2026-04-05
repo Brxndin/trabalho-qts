@@ -1,5 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class MedicoController {
@@ -59,13 +60,15 @@ export class MedicoController {
 
             const [medicoId, emailCadastrado, token] = await this.medicoRepository.create(req.body);
 
+            let mensagemEmail = null;
+
             // se não tem token o usuário já existe
             if (token) {
-                enviarEmailDefinicaoSenha(emailCadastrado, token);
+                mensagemEmail = await enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
             return customSuccess(res, {
-                message: 'Médico criado com sucesso!',
+                message: multiConcat(' ', 'Médico criado com sucesso!', mensagemEmail),
                 data: {
                     id: medicoId,
                 },

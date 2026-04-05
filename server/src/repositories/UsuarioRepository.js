@@ -130,15 +130,15 @@ export class UsuarioRepository {
             telefone: 'telefone',
         });
 
-        await knex.transaction(async (trx) => {
-            await trx('usuarios')
+        return await knex.transaction(async (trx) => {
+            return await trx('usuarios')
                 .where('usuarios.id', id)
                 .update(dadosFiltrados);
         });
     }
 
     async delete(id) {
-        await knex.transaction(async (trx) => {
+        return await knex.transaction(async (trx) => {
             // # to do
             // verificar quais dados podem ser removidos e quais não
             // isso por que, se não permitir remover consultas, da pra tirar daqui, mas terá que ter validação pra jogar um erro tratado
@@ -167,9 +167,11 @@ export class UsuarioRepository {
                 .where('usuarios_tipos.usuario_id', id)
                 .delete();
 
-            await trx('usuarios')
+            const linhasAlteradas = await trx('usuarios')
                 .where('usuarios.id', id)
                 .delete();
+
+            return linhasAlteradas;
         });
     }
 

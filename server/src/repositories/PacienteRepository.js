@@ -199,19 +199,23 @@ export class PacienteRepository {
             dataNascimento: 'data_nascimento'
         });
 
-        await knex.transaction(async (trx) => {
-            if (Object.keys(dadosFiltradosUsuario).length > 0) {
-                await trx('usuarios')
+        return await knex.transaction(async (trx) => {
+            let linhasAfetadas = 0;
+            
+            if (!isEmptyObject(dadosFiltradosUsuario)) {
+                linhasAfetadas += await trx('usuarios')
                     .join('pacientes', 'pacientes.usuario_id', 'usuarios.id')
                     .where('pacientes.id', id)
                     .update(dadosFiltradosUsuario);
             }
-
-            if (Object.keys(dadosFiltradosPaciente).length > 0) {
-                await trx('pacientes')
+                
+            if (!isEmptyObject(dadosFiltradosPaciente)) {
+                linhasAfetadas += await trx('pacientes')
                     .where('pacientes.id', id)
                     .update(dadosFiltradosPaciente);
             }
+
+            return linhasAfetadas;
         });
     }
 

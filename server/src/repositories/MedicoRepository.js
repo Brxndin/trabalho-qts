@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 import knex from '../config/knex.js';
-import { filtraDadosPermitidos } from '../helpers/customValidators.js';
+import { filtraDadosPermitidos, isEmptyObject } from '../helpers/customValidators.js';
 import { Medico } from '../models/Medico.js';
 import { Usuario } from '../models/Usuario.js';
 
@@ -209,15 +209,23 @@ export class MedicoRepository {
             crm: 'crm'
         });
 
-        await knex.transaction(async (trx) => {
-            await trx('usuarios')
-                .join('medicos', 'medicos.usuario_id', 'usuarios.id')
-                .where('medicos.id', id)
-                .update(dadosFiltradosUsuario);
+        return await knex.transaction(async (trx) => {
+            let linhasAfetadas = 0;
+            
+            if (!isEmptyObject(dadosFiltradosUsuario)) {
+                linhasAfetadas += await trx('usuarios')
+                    .join('medicos', 'medicos.usuario_id', 'usuarios.id')
+                    .where('medicos.id', id)
+                    .update(dadosFiltradosUsuario);
+            }
+                
+            if (!isEmptyObject(dadosFiltradosMedico)) {
+                linhasAfetadas += await trx('medicos')
+                    .where('medicos.id', id)
+                    .update(dadosFiltradosMedico);
+            }
 
-            await trx('medicos')
-                .where('medicos.id', id)
-                .update(dadosFiltradosMedico);
+            return linhasAfetadas;
         });
     }
 

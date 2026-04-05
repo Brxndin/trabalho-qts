@@ -9,9 +9,11 @@ export class UsuarioRepository {
         const usuarios = await knex('usuarios')
             .select(
                 'usuarios.*',
-                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
-            )
-            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id');
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
+            );
 
         return usuarios.map((usuario) => new Usuario({
             id: usuario.id,
@@ -25,9 +27,11 @@ export class UsuarioRepository {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
-                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
             )
-            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
             .where('usuarios.id', id)
             .first();
 

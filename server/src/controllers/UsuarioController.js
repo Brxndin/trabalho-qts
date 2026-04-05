@@ -69,7 +69,33 @@ export class UsuarioController {
         try {
             const id = parseInt(req.params.id);
 
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do usuário!', 400);
+            }
 
+            const usuario = await this.usuarioRepository.findById(id);
+
+            // to do
+            // verificar regras específicas de usuários (se tiver alguma)
+            // não poderá atualizar o e-mail se já existir um igual em uso
+            // mesma coisa pra cpf
+            // deve aplicar essa validação no create e no update dos outros cadastros pois não tem
+            // importante que na query considere que o e-mail seja diferente do usuário atual (se não vai achar ele mesmo e vai dar erro igual)
+            if (!usuario) {
+                throw new CustomError('O usuário informado não existe!', 404);
+            }
+
+            const linhasAfetadas = await this.usuarioRepository.update(id, req.body);
+
+            if (linhasAfetadas === 0) {
+                return customSuccess(res, {
+                    message: 'Nenhum dado novo foi informado!',
+                });
+            }
+
+            return customSuccess(res, {
+                message: 'Usuário atualizado com sucesso!',
+            });
         } catch (error) {
             next(error);
         }
@@ -79,7 +105,30 @@ export class UsuarioController {
         try {
             const id = parseInt(req.params.id);
 
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do usuário!', 400);
+            }
             
+            // impede que um usuário (como o administrador) se exclua
+            if (id == req.payload.id) {
+                throw new CustomError('O usuário não pode se excluir!', 400);
+            }
+
+            // to do
+            // verificar regras específicas de usuário
+            // exemplo: não da pra remover pacientes que tem consultas relacionadas
+            // isso por que consultas não podem ser removidas
+            // na verdade, o próprio usuário não pode ser removido, então apesar de ter a função, não será acessada
+
+            const linhasAfetadas = await this.usuarioRepository.delete(id);
+
+            if (linhasAfetadas === 0) {
+                throw new CustomError('O usuário informado não existe!', 404);
+            }
+
+            return customSuccess(res, {
+                message: 'Usuário excluído com sucesso!',
+            });
         } catch (error) {
             next(error);
         }

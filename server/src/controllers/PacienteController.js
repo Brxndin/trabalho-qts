@@ -79,25 +79,61 @@ export class PacienteController {
         }
     };
 
-    // # to do
-    // criar a lógica pra atualizar
     update = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do paciente!', 400);
+            }
 
+            const paciente = await this.pacienteRepository.findById(id);
+
+            // to do
+            // verificar regras específicas de pacientes (se tiver alguma)
+            if (!paciente) {
+                throw new CustomError('O paciente informado não existe!', 404);
+            }
+
+            const linhasAfetadas = await this.pacienteRepository.update(id, req.body);
+
+            if (linhasAfetadas === 0) {
+                return customSuccess(res, {
+                    message: 'Nenhum dado novo foi informado!',
+                });
+            }
+
+            return customSuccess(res, {
+                message: 'Paciente atualizado com sucesso!',
+            });
         } catch (error) {
             next(error);
         }
     };
 
-    // # to do
-    // criar a lógica pra deletar
     delete = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
-            
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do paciente!', 400);
+            }
+
+            // to do
+            // verificar regras específicas de paciente
+            // exemplo: não da pra remover pacientes que tem consultas relacionadas
+            // isso por que consultas não podem ser removidas
+            // na verdade, o próprio paciente não pode ser removido, então apesar de ter a função, não será acessada
+
+            const linhasAfetadas = await this.pacienteRepository.delete(id);
+
+            if (linhasAfetadas === 0) {
+                throw new CustomError('O paciente informado não existe!', 404);
+            }
+
+            return customSuccess(res, {
+                message: 'Paciente excluído com sucesso!',
+            });
         } catch (error) {
             next(error);
         }

@@ -219,18 +219,57 @@ export class PacienteRepository {
         });
     }
 
-    // # to do
-    // verificar a questão do id, pois terá que enviar, após excluir o paciente, o id do usuário
-    // se não o usuário não será excluído
-    // ele só poderá ser excluído se o paciente for o último tipo dele
+    // to do
+    // verificar a questão das consultas
+    // a ideia é deixar a regra de negócio na controller, bloqueando de remover
+    // mas aqui teria que ter pois o paciente tem foreign key com consultas
+    // se um dia a regra da consulta cair, vai dar erro ao remover o paciente
     async delete(id) {
-        // # to do
-        // aqui vai excluir o paciente com certeza, mas só vai excluir o usuário se ele tiver apenas um tipo restante
-        // se ele tiver mais de um tipo, deve continuar existindo
-        await knex.transaction(async (trx) => {
-            await trx('pacientes')
-                .where('pacientes.id', id)
-                .delete();
+        return await knex.transaction(async (trx) => {
+            const tiposUsuario = await trx('usuarios_tipos')
+                .select('usuarios_tipos.*')
+                .join('usuarios', 'usuarios.id', 'usuarios_tipos.usuario_id')
+                .join('pacientes', 'pacientes.usuario_id', 'usuarios.id')
+                .where('pacientes.id', id);
+
+            let linhasAfetadas = 0;
+
+            // se o usuário tem mais de um tipo, continua existindo
+            if (tiposUsuario.length > 1) {
+                await trx('usuarios_tipos')
+                    .where('usuarios_tipos.usuario_id', function () {
+                        this
+                            .select('pacientes.usuario_id')
+                            .from('pacientes')
+                            .where('pacientes.id', id)
+                    })
+                    .where('usuarios_tipos.tipo', Usuario.tipos.FUNCIONARIO)
+                    .delete();
+
+                linhasAfetadas = await trx('pacientes')
+                    .where('pacientes.id', id)
+                    .delete();
+            } else if (tiposUsuario.length == 1) {
+                const usuarioId = tiposUsuario[0].usuario_id;
+
+                linhasAfetadas = await trx('pacientes')
+                    .where('pacientes.id', id)
+                    .delete();
+
+                await trx('recuperacao_senhas')
+                    .where('recuperacao_senhas.usuario_id', usuarioId)
+                    .delete();
+
+                await trx('usuarios_tipos')
+                    .where('usuarios_tipos.usuario_id', usuarioId)
+                    .delete();
+
+                await trx('usuarios')
+                    .where('usuarios.id', usuarioId)
+                    .delete();
+            }
+
+            return linhasAfetadas;
         });
     }
 

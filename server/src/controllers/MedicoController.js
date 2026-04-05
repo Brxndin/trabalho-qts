@@ -79,25 +79,60 @@ export class MedicoController {
         }
     };
 
-    // # to do
-    // criar a lógica pra atualizar
     update = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do médico!', 400);
+            }
 
+            const medico = await this.medicoRepository.findById(id);
+
+            // to do
+            // verificar regras específicas de médicos (se tiver alguma)
+            if (!medico) {
+                throw new CustomError('O médico informado não existe!', 404);
+            }
+
+            const linhasAfetadas = await this.medicoRepository.update(id, req.body);
+
+            if (linhasAfetadas === 0) {
+                return customSuccess(res, {
+                    message: 'Nenhum dado novo foi informado!',
+                });
+            }
+
+            return customSuccess(res, {
+                message: 'Médico atualizado com sucesso!',
+            });
         } catch (error) {
             next(error);
         }
     };
 
-    // # to do
-    // criar a lógica pra deletar
     delete = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
-            
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do médico!', 400);
+            }
+
+            // to do
+            // verificar regras específicas de médico
+            // exemplo: não da pra remover pacientes que tem consultas relacionadas
+            // isso por que consultas não podem ser removidas
+
+            const linhasAfetadas = await this.medicoRepository.delete(id);
+
+            if (linhasAfetadas === 0) {
+                throw new CustomError('O médico informado não existe!', 404);
+            }
+
+            return customSuccess(res, {
+                message: 'Médico excluído com sucesso!',
+            });
         } catch (error) {
             next(error);
         }

@@ -79,25 +79,53 @@ export class FuncionarioController {
         }
     };
 
-    // # to do
-    // criar a lógica pra atualizar
     update = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do funcionário!', 400);
+            }
 
+            const funcionario = await this.funcionarioRepository.findById(id);
+
+            if (!funcionario) {
+                throw new CustomError('O funcionário informado não existe!', 404);
+            }
+
+            const linhasAfetadas = await this.funcionarioRepository.update(id, req.body);
+
+            if (linhasAfetadas === 0) {
+                return customSuccess(res, {
+                    message: 'Nenhum dado novo foi informado!',
+                });
+            }
+
+            return customSuccess(res, {
+                message: 'Funcionário atualizado com sucesso!',
+            });
         } catch (error) {
             next(error);
         }
     };
 
-    // # to do
-    // criar a lógica pra deletar
     delete = async (req, res, next) => {
         try {
             const id = parseInt(req.params.id);
 
-            
+            if (!id) {
+                throw new CustomError('É preciso informar o ID do funcionário!', 400);
+            }
+
+            const linhasAfetadas = await this.funcionarioRepository.delete(id);
+
+            if (linhasAfetadas === 0) {
+                throw new CustomError('O funcionário informado não existe!', 404);
+            }
+
+            return customSuccess(res, {
+                message: 'Funcionário excluído com sucesso!',
+            });
         } catch (error) {
             next(error);
         }

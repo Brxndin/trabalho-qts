@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 import knex from '../config/knex.js';
-import { filtraDadosPermitidos } from '../helpers/customValidators.js';
+import { filtraDadosPermitidos, isEmptyObject } from '../helpers/customValidators.js';
 import { Funcionario } from '../models/Funcionario.js';
 import { Usuario } from '../models/Usuario.js';
 
@@ -211,30 +211,72 @@ export class FuncionarioRepository {
             funcao: 'funcao'
         });
 
-        await knex.transaction(async (trx) => {
-            await trx('usuarios')
-                .join('funcionarios', 'funcionarios.usuario_id', 'usuarios.id')
-                .where('funcionarios.id', id)
-                .update(dadosFiltradosUsuario);
+        return await knex.transaction(async (trx) => {
+            let linhasAfetadas = 0;
 
-            await trx('funcionarios')
-                .where('funcionarios.id', id)
-                .update(dadosFiltradosFuncionario);
+            if (!isEmptyObject(dadosFiltradosUsuario)) {
+                linhasAfetadas += await trx('usuarios')
+                    .join('funcionarios', 'funcionarios.usuario_id', 'usuarios.id')
+                    .where('funcionarios.id', id)
+                    .update(dadosFiltradosUsuario);
+            }
+                
+            if (!isEmptyObject(dadosFiltradosFuncionario)) {
+                linhasAfetadas += await trx('funcionarios')
+                    .where('funcionarios.id', id)
+                    .update(dadosFiltradosFuncionario);
+            }
+
+            return linhasAfetadas;
         });
     }
 
-    // # to do
-    // verificar a questão do id, pois terá que enviar, após excluir o médico, o id do usuário
-    // se não o usuário não será excluído
-    // ele só poderá ser excluído se o médico for o último tipo dele
     async delete(id) {
-        // # to do
-        // aqui vai excluir o médico com certeza, mas só vai excluir o usuário se ele tiver apenas um tipo restante
-        // se ele tiver mais de um tipo, deve continuar existindo
-        await knex.transaction(async (trx) => {
-            await trx('funcionarios')
-                .where('funcionarios.id', id)
-                .delete();
+        return await knex.transaction(async (trx) => {
+            const tiposUsuario = await trx('usuarios_tipos')
+                .select('usuarios_tipos.*')
+                .join('usuarios', 'usuarios.id', 'usuarios_tipos.usuario_id')
+                .join('funcionarios', 'funcionarios.usuario_id', 'usuarios.id')
+                .where('funcionarios.id', id);
+
+            let linhasAfetadas = 0;
+
+            // se o usuário tem mais de um tipo, continua existindo
+            if (tiposUsuario.length > 1) {
+                await trx('usuarios_tipos')
+                    .where('usuarios_tipos.usuario_id', function () {
+                        this
+                            .select('funcionarios.usuario_id')
+                            .from('funcionarios')
+                            .where('funcionarios.id', id)
+                    })
+                    .where('usuarios_tipos.tipo', Usuario.tipos.FUNCIONARIO)
+                    .delete();
+
+                linhasAfetadas = await trx('funcionarios')
+                    .where('funcionarios.id', id)
+                    .delete();
+            } else if (tiposUsuario.length == 1) {
+                const usuarioId = tiposUsuario[0].usuario_id;
+
+                linhasAfetadas = await trx('funcionarios')
+                    .where('funcionarios.id', id)
+                    .delete();
+
+                await trx('recuperacao_senhas')
+                    .where('recuperacao_senhas.usuario_id', usuarioId)
+                    .delete();
+
+                await trx('usuarios_tipos')
+                    .where('usuarios_tipos.usuario_id', usuarioId)
+                    .delete();
+
+                await trx('usuarios')
+                    .where('usuarios.id', usuarioId)
+                    .delete();
+            }
+
+            return linhasAfetadas;
         });
     }
 

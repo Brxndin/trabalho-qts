@@ -135,7 +135,7 @@ export class MedicoRepository {
         // verifica se já tem usuário com os dados informados
         const usuario = await this.findUsuarioByEmail(data.email);
 
-        const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
+        return await knex.transaction(async (trx) => {
             let usuarioId = null;
             let emailCadastrado = null;
             let token = null;
@@ -190,8 +190,6 @@ export class MedicoRepository {
 
             return [medicoId, emailCadastrado, token]; 
         });
-
-        return [id, emailCadastrado, token];
     }
 
     async update(id, data) {

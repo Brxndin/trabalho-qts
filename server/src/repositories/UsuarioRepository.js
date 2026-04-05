@@ -91,7 +91,7 @@ export class UsuarioRepository {
     }
 
     async create(data) {
-        const [id, emailCadastrado, token] = await knex.transaction(async (trx) => {
+        return await knex.transaction(async (trx) => {
             const [usuarioId] = await trx('usuarios')
                 .insert({
                     nome: data.nome,
@@ -114,8 +114,6 @@ export class UsuarioRepository {
 
             return [usuarioId, data.email, token];
         });
-
-        return [id, emailCadastrado, token];
     }
 
     async update(id, data) {

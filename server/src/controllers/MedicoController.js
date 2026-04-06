@@ -139,10 +139,11 @@ export class MedicoController {
                 throw new CustomError('É preciso informar o ID do médico!', 400);
             }
 
-            // to do
-            // verificar regras específicas de médico
-            // exemplo: não da pra remover pacientes que tem consultas relacionadas
-            // isso por que consultas não podem ser removidas
+            const consultas = await this.medicoRepository.findConsultasByMedicoID(id);
+
+            if (consultas.length > 0) {
+                throw new CustomError('O médico não pode ser removido pois tem consultas vinculadas!', 400);
+            }
 
             const linhasAfetadas = await this.medicoRepository.delete(id);
 

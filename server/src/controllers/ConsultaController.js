@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
 
@@ -54,7 +55,6 @@ export class ConsultaController {
             // verificar sobre código, como vai funcionar, se gera no momento que entra na tela, no momento do salvamento
             // importante ver que, se outra pessoa abrir a mesma tela, há uma chance pequena de o código gerado ser igual e, quando for salvar vai dar erro de repetição
 
-            // verificar sobre data e hora de atendimento pois poderia ser a hora atual
             // verificar para criar um helper que liste os obrigatórios em formato singular ao invés de todos juntos
             if (!codigo || !dataHoraAtendimento || !medicoCPF || !pacienteCPF || !descricaoSintomas || !diagnosticoETratamentoSugerido || !statusPagamento) {
                 throw new CustomError('Código, Data e Hora de Atendimento, CPF do Médico, CPF do Paciente, Descrição dos Sintomas, Diagnóstico e Tratamento Sugerido e Status do Pagamento são obrigatórios!', 400);
@@ -62,6 +62,12 @@ export class ConsultaController {
             
             if (medicoCPF == pacienteCPF) {
                 throw new CustomError('O médico e o paciente não podem ser a mesma pessoa!', 400);
+            }
+
+            let dataHoraAtendimentoTratada = dayjs(dataHoraAtendimento);
+
+            if (!dataHoraAtendimentoTratada.isValid()) {
+                throw new CustomError('A data e hora de atendimento está num formato inválido!', 400);
             }
 
             const medico = this.consultaRepository.findMedicoByCPF(medicoCPF);

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
 import { multiConcat } from '../helpers/customValidators.js';
@@ -45,6 +46,20 @@ export class PacienteController {
                 throw new CustomError('Nome, E-mail, CPF e Data de Nascimento são obrigatórios!', 400);
             }
 
+            let dataNascimentoTratada = dayjs(dataNascimento);
+
+            if (!dataNascimentoTratada.isValid()) {
+                throw new CustomError('A data de nascimento está num formato inválido!', 400);
+            }
+
+            if (dataNascimentoTratada.isAfter(dayjs())) {
+                throw new CustomError('A data de nascimento não pode ser uma data futura!', 400);
+            }
+
+            if (dayjs().diff(dataNascimentoTratada, 'year') > 130) {
+                throw new CustomError('A idade do paciente não pode ser superior a 130 anos!', 400);
+            }
+
             // valida se já há paciente com esse email e cpf
             let paciente = await this.pacienteRepository.findByCPF(cpf);
 
@@ -89,13 +104,25 @@ export class PacienteController {
 
             const paciente = await this.pacienteRepository.findById(id);
 
-            // to do
-            // verificar regras específicas de pacientes (se tiver alguma)
             if (!paciente) {
                 throw new CustomError('O paciente informado não existe!', 404);
             }
 
-            const { email, cpf } = req.body;
+            const { email, cpf, dataNascimento } = req.body;
+
+            let dataNascimentoTratada = dayjs(dataNascimento);
+
+            if (!dataNascimentoTratada.isValid()) {
+                throw new CustomError('A data de nascimento está num formato inválido!', 400);
+            }
+
+            if (dataNascimentoTratada.isAfter(dayjs())) {
+                throw new CustomError('A data de nascimento não pode ser uma data futura!', 400);
+            }
+
+            if (dayjs().diff(dataNascimentoTratada, 'year') > 130) {
+                throw new CustomError('A idade do paciente não pode ser superior a 130 anos!', 400);
+            }
 
             let usuario = null;
 

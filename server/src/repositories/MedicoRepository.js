@@ -247,8 +247,8 @@ export class MedicoRepository {
             // se o usuário tem mais de um tipo, continua existindo
             if (tiposUsuario.length > 1) {
                 await trx('usuarios_tipos')
-                    .where('usuarios_tipos.usuario_id', function () {
-                        this
+                    .where('usuarios_tipos.usuario_id', (query) => {
+                        query
                             .select('medicos.usuario_id')
                             .from('medicos')
                             .where('medicos.id', id)

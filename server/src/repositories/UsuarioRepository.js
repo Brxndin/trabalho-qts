@@ -217,10 +217,10 @@ export class UsuarioRepository {
             await trx('recuperacao_senhas')
                 .where('recuperacao_senhas.token', token)
                 // remove os tokens que já expiraram e que são do mesmo usuário do token atual
-                .orWhere(function () {
-                    this
-                        .where('recuperacao_senhas.usuario_id', function () {
-                            this
+                .orWhere((query) => {
+                    query
+                        .where('recuperacao_senhas.usuario_id', (query) => {
+                            query
                                 .select('sub_recuperacao_senhas.usuario_id')
                                 .from('recuperacao_senhas as sub_recuperacao_senhas')
                                 .where('sub_recuperacao_senhas.token', token)

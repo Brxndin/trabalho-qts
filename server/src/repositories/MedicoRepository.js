@@ -272,11 +272,7 @@ export class MedicoRepository {
         });
     }
 
-    // to do
-    // verificar a questão das consultas
-    // a ideia é deixar a regra de negócio na controller, bloqueando de remover
-    // mas aqui teria que ter pois o médico tem foreign key com consultas
-    // se um dia a regra da consulta cair, vai dar erro ao remover o médico
+    // por regra não remove consultas, mas se um dia a regra da consulta cair, a função está preparada
     async delete(id) {
         return await knex.transaction(async (trx) => {
             const tiposUsuario = await trx('usuarios_tipos')
@@ -289,6 +285,10 @@ export class MedicoRepository {
 
             // se o usuário tem mais de um tipo, continua existindo
             if (tiposUsuario.length > 1) {
+                await trx('consultas')
+                    .where('consultas.medico_id', id)
+                    .delete();
+
                 await trx('usuarios_tipos')
                     .where('usuarios_tipos.usuario_id', (query) => {
                         query
@@ -304,6 +304,10 @@ export class MedicoRepository {
                     .delete();
             } else if (tiposUsuario.length == 1) {
                 const usuarioId = tiposUsuario[0].usuario_id;
+
+                await trx('consultas')
+                    .where('consultas.medico_id', id)
+                    .delete();
 
                 linhasAfetadas = await trx('medicos')
                     .where('medicos.id', id)

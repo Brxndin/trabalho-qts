@@ -48,14 +48,21 @@ export class UsuarioRepository {
         });
     }
 
-    async findByCPF(cpf) {
+    async findByCPF(cpf, idAtual = null) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
-                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
             )
-            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
             .where('usuarios.cpf', cpf)
+            .modify((query) => {
+                if (idAtual) {
+                    query.where('usuarios.id', '!=', idAtual);
+                }
+            })
             .first();
 
         if (!usuario || !usuario?.id) {
@@ -71,14 +78,21 @@ export class UsuarioRepository {
         });
     }
 
-    async findByEmail(email) {
+    async findByEmail(email, idAtual = null) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
-                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
             )
-            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
             .where('usuarios.email', email)
+            .modify((query) => {
+                if (idAtual) {
+                    query.where('usuarios.id', '!=', idAtual);
+                }
+            })
             .first();
 
         if (!usuario || !usuario?.id) {

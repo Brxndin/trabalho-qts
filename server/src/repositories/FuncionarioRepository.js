@@ -108,14 +108,57 @@ export class FuncionarioRepository {
         });
     }
 
-    async findUsuarioByEmail(email) {
+    async findUsuarioByEmail(email, idFuncionarioAtual = null) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
-                knex.raw('JSON_ARRAYAGG(usuarios_tipos.tipo) as tipos')
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
             )
-            .join('usuarios_tipos', 'usuarios_tipos.usuario_id', 'usuarios.id')
             .where('usuarios.email', email)
+            .modify((query) => {
+                if (idFuncionarioAtual) {
+                    query
+                        // se não for raw, acaba tratando como uma coluna
+                        .join('funcionarios', 'funcionarios.id', knex.raw('?', [idFuncionarioAtual]))
+                        .whereRaw('usuarios.id != funcionarios.usuario_id');
+                }
+            })
+            .first();
+
+        if (!usuario || !usuario?.id) {
+            return null;
+        }
+
+        return new Usuario({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            tipos: JSON.parse(usuario.tipos)
+        });
+    }
+
+    async findUsuarioByCPF(cpf, idFuncionarioAtual = null) {
+        const usuario = await knex('usuarios')
+            .select(
+                'usuarios.*',
+                knex('usuarios_tipos')
+                    .select(knex.raw('JSON_ARRAYAGG(tipo)'))
+                    .whereRaw('usuarios_tipos.usuario_id = usuarios.id')
+                    .as('tipos')
+            )
+            .where('usuarios.cpf', cpf)
+            .modify((query) => {
+                if (idFuncionarioAtual) {
+                    query
+                        // se não for raw, acaba tratando como uma coluna
+                        .join('funcionarios', 'funcionarios.id', knex.raw('?', [idFuncionarioAtual]))
+                        .whereRaw('usuarios.id != funcionarios.usuario_id');
+                }
+            })
             .first();
 
         if (!usuario || !usuario?.id) {

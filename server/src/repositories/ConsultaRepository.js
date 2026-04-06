@@ -73,7 +73,7 @@ export class ConsultaRepository {
     }
 
     async create(data) {
-        const consultaId = await knex.transaction(async (trx) => {
+        return await knex.transaction(async (trx) => {
             const [id] = await trx('consultas')
                 .insert({
                     codigo: data.codigo,
@@ -88,35 +88,6 @@ export class ConsultaRepository {
                 });
 
             return id;
-        });
-
-        return consultaId;
-    }
-
-    // verificar se vai manter isso pois, por regra, não pode editar consulta
-    async update(id, data) {
-        // verificar o que irá retornar
-        // talvez seja interessante retornar os campos modificados
-        await knex.transaction(async (trx) => {
-            await trx('consultas')
-                .where('consultas.id', id)
-                .update({
-                    data_hora_atendimento: data.dataHoraAtendimento,
-                    descricao_sintomas: data.descricaoSintomas,
-                    temperatura: data.temperatura,
-                    peso: data.peso,
-                    diagnostico_e_tratamento_sugerido: data.diagnosticoETratamentoSugerido,
-                    status_pagamento: data.statusPagamento,
-                });
-        });
-    }
-
-    // verificar se vai manter isso pois, por regra, não pode remover consulta
-    async delete(id) {
-        await knex.transaction(async (trx) => {
-            await trx('consultas')
-                .where('consultas.id', id)
-                .delete();
         });
     }
 }

@@ -57,28 +57,4 @@ export class ConsultaController {
             next(error);
         }
     };
-
-    // # to do
-    // criar a lógica pra atualizar
-    update = async (req, res, next) => {
-        try {
-            const id = parseInt(req.params.id);
-
-
-        } catch (error) {
-            next(error);
-        }
-    };
-
-    // # to do
-    // criar a lógica pra deletar
-    delete = async (req, res, next) => {
-        try {
-            const id = parseInt(req.params.id);
-
-            
-        } catch (error) {
-            next(error);
-        }
-    };
 }

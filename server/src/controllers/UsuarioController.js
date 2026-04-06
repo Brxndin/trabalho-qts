@@ -73,16 +73,28 @@ export class UsuarioController {
                 throw new CustomError('É preciso informar o ID do usuário!', 400);
             }
 
-            const usuario = await this.usuarioRepository.findById(id);
+            let usuario = await this.usuarioRepository.findById(id);
 
-            // to do
-            // verificar regras específicas de usuários (se tiver alguma)
-            // não poderá atualizar o e-mail se já existir um igual em uso
-            // mesma coisa pra cpf
-            // deve aplicar essa validação no create e no update dos outros cadastros pois não tem
-            // importante que na query considere que o e-mail seja diferente do usuário atual (se não vai achar ele mesmo e vai dar erro igual)
             if (!usuario) {
                 throw new CustomError('O usuário informado não existe!', 404);
+            }
+
+            const { email, cpf } = req.body;
+
+            if (email) {
+                usuario = await this.usuarioRepository.findByEmail(email, id);
+
+                if (usuario) {
+                    throw new CustomError('O e-mail informado não pode ser usado!', 400);
+                }
+            }
+
+            if (cpf) {
+                usuario = await this.usuarioRepository.findByCPF(cpf, id);
+
+                if (usuario) {
+                    throw new CustomError('O CPF informado não pode ser usado!', 400);
+                }
             }
 
             const linhasAfetadas = await this.usuarioRepository.update(id, req.body);

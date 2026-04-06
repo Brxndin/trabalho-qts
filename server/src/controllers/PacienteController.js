@@ -95,6 +95,26 @@ export class PacienteController {
                 throw new CustomError('O paciente informado não existe!', 404);
             }
 
+            const { email, cpf } = req.body;
+
+            let usuario = null;
+
+            if (email) {
+                usuario = await this.pacienteRepository.findUsuarioByEmail(email, id);
+
+                if (usuario) {
+                    throw new CustomError('O e-mail informado não pode ser usado!', 400);
+                }
+            }
+
+            if (cpf) {
+                usuario = await this.pacienteRepository.findUsuarioByCPF(cpf, id);
+
+                if (usuario) {
+                    throw new CustomError('O CPF informado não pode ser usado!', 400);
+                }
+            }
+
             const linhasAfetadas = await this.pacienteRepository.update(id, req.body);
 
             if (linhasAfetadas === 0) {

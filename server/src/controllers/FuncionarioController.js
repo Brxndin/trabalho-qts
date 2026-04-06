@@ -93,6 +93,26 @@ export class FuncionarioController {
                 throw new CustomError('O funcionário informado não existe!', 404);
             }
 
+            const { email, cpf } = req.body;
+
+            let usuario = null;
+
+            if (email) {
+                usuario = await this.funcionarioRepository.findUsuarioByEmail(email, id);
+
+                if (usuario) {
+                    throw new CustomError('O e-mail informado não pode ser usado!', 400);
+                }
+            }
+
+            if (cpf) {
+                usuario = await this.funcionarioRepository.findUsuarioByCPF(cpf, id);
+
+                if (usuario) {
+                    throw new CustomError('O CPF informado não pode ser usado!', 400);
+                }
+            }
+
             const linhasAfetadas = await this.funcionarioRepository.update(id, req.body);
 
             if (linhasAfetadas === 0) {

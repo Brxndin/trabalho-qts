@@ -1,4 +1,5 @@
 import CustomError from '../helpers/customError.js';
+import customSuccess from '../helpers/customSuccess.js';
 
 export class ConsultaController {
     constructor(consultaRepository) {
@@ -7,9 +8,12 @@ export class ConsultaController {
 
     index = async (req, res, next) => {
         try {
-            const consultas = await this.consultaRepository.findAll();
+            // o médico logado só pode ver as próprias consultas
+            const consultas = await this.consultaRepository.findAll(req.payload.id);
 
-            return res.status(200).json(consultas);
+            return customSuccess(res, {
+                data: consultas
+            });
         } catch (error) {
             next(error);
         }
@@ -18,13 +22,17 @@ export class ConsultaController {
     show = async (req, res, next) => {
         try {
             const { id } = req.params;
-            const consulta = await this.consultaRepository.findById(id);
+
+            // o médico logado só pode ver as próprias consultas
+            const consulta = await this.consultaRepository.findById(id, req.payload.id);
 
             if (!consulta) {
                 throw new CustomError('Consulta não encontrada.', 404);
             }
 
-            return res.status(200).json(consulta);
+            return customSuccess(res, {
+                data: consulta,
+            });
         } catch (error) {
             next(error);
         }
@@ -32,26 +40,53 @@ export class ConsultaController {
 
     store = async (req, res, next) => {
         try {
-            const { nome, email, tipos, senha } = req.body;
+            const {
+                codigo,
+                dataHoraAtendimento,
+                pacienteCPF,
+                medicoCPF,
+                descricaoSintomas,
+                diagnosticoETratamentoSugerido,
+                statusPagamento
+            } = req.body;
 
-            // # to do
-            // necessário validar os tipos, que será um array
-            // esse array servirá para definir se vai criar médicos, funcionários ou pacientes
-            // ou seja, ao criar ou buscar o usuário, deverá consultar a tabela de ligação e colocar na model
-            // isso faz com que a model e a tabela no banco não dependam um do outro pois não tem a exata estrutura
-            if (!nome || !email || !senha) {
-                throw new CustomError('Nome, E-mail e Senha são obrigatórios!', 400);
+            // to do
+            // verificar sobre código, como vai funcionar, se gera no momento que entra na tela, no momento do salvamento
+            // importante ver que, se outra pessoa abrir a mesma tela, há uma chance pequena de o código gerado ser igual e, quando for salvar vai dar erro de repetição
+
+            // verificar sobre data e hora de atendimento pois poderia ser a hora atual
+            // verificar para criar um helper que liste os obrigatórios em formato singular ao invés de todos juntos
+            if (!codigo || !dataHoraAtendimento || !medicoCPF || !pacienteCPF || !descricaoSintomas || !diagnosticoETratamentoSugerido || !statusPagamento) {
+                throw new CustomError('Código, Data e Hora de Atendimento, CPF do Médico, CPF do Paciente, Descrição dos Sintomas, Diagnóstico e Tratamento Sugerido e Status do Pagamento são obrigatórios!', 400);
+            }
+            
+            if (medicoCPF == pacienteCPF) {
+                throw new CustomError('O médico e o paciente não podem ser a mesma pessoa!', 400);
             }
 
-            if (tipos.length <= 0) {
-                throw new CustomError('Informe ao menos um Tipo para o usuário!', 400);
+            const medico = this.consultaRepository.findMedicoByCPF(medicoCPF);
+
+            if (!medico) {
+                throw new CustomError('O médico informado não foi encontrado!', 404);
             }
 
-            const userId = await this.consultaRepository.create(req.body);
+            const paciente = this.consultaRepository.findPacienteByCPF(pacienteCPF);
 
-            return res.status(201).json({
-                id: userId,
-                mensagem: 'Consulta criada com sucesso!',
+            if (!paciente) {
+                throw new CustomError('O paciente informado não foi encontrado!', 404);
+            }
+
+            req.body.medicoId = medico.id;
+            req.body.pacienteId = paciente.id;
+
+            const consultaId = await this.consultaRepository.create(req.body);
+
+            return customSuccess(res, {
+                message: 'Consulta criada com sucesso!',
+                data: {
+                    id: consultaId,
+                },
+                statusCode: 201,
             });
         } catch (error) {
             next(error);

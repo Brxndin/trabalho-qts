@@ -14,6 +14,5 @@ router.get('/', verifyJWT, pacienteController.index);
 router.get('/:id', verifyJWT, pacienteController.show);
 router.post('/', verifyJWT, verifyFuncionario, pacienteController.store);
 router.put('/:id', verifyJWT, verifyFuncionario, pacienteController.update);
-// router.delete('/:id', verifyJWT, pacienteController.delete);
 
 export default router;

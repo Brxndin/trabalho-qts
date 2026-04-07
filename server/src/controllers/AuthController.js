@@ -129,7 +129,7 @@ export class AuthController {
             // cria novo token e remove os antigos do mesmo usuário
             const token = await this.usuarioRepository.createToken(usuario.id);
 
-            const mensagemRetorno = await enviarEmailDefinicaoSenha(usuario.email, token);
+            const mensagemRetorno = await enviarEmailDefinicaoSenha(usuario.email, token, 'troca');
 
             return customSuccess(res, {
                 message: mensagemRetorno

@@ -1,10 +1,8 @@
+import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
 // envia e-mail de primeiro acesso ou de recuperação de senha
-export async function enviarEmailDefinicaoSenha(email, token) {
-    // # to do
-    // esse link vai ser pro frontend, por isso é necessário não usar as variáveis e rotas iguais as do back
-    // quando tiver o front, alterar
+export async function enviarEmailDefinicaoSenha(email, token, tipoEmail = 'registro') {
     const link = `http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/criar-senha?token=${token}`;
 
     const transporter = nodemailer.createTransport({
@@ -14,18 +12,30 @@ export async function enviarEmailDefinicaoSenha(email, token) {
         secure: false,
     });
 
-    // # to do
-    // verificar se tem como mandar uma view ou escrever esse html melhor
-    // em string assim fica paia
-    // verificar também pra mudar o layout quando for a opção de recuperar a senha
-    // um layout genérico pros dois também resolve
+    let subject = null;
+    let mensagem = null;
+
+    if (tipoEmail == 'registro') {
+        subject = 'Criação de Senha - Primeiro Acesso';
+        mensagem = `
+            <h1>Bem-vindo à Clínica de Cardiologia!</h1>
+            <p>Um funcionário acabou de cadastrar você em nosso sistema.</p>
+        `;
+    } else {
+        subject = 'Redefinição de Senha';
+        mensagem = `
+            <h1>Olá!</h1>
+            <p>Estamos enviando esse e-mail pois você solicitou a alteração de sua senha da Clínica de Cardiologia.</p>
+            <p>Se não foi você quem solicitou a mudança de senha, ignore.</p>
+        `;
+    }
+
     const info = await transporter.sendMail({
         from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
         to: email,
-        subject: 'Criação de Senha - Primeiro Acesso',
+        subject: subject,
         html: `
-            <h1>Bem-vindo à Clínica de Cardiologia!</h1>
-            <p>Um funcionário acabou de cadastrar você em nosso sistema.</p>
+            ${mensagem}
             <p>Para criar sua senha de acesso, clique no link abaixo:</p>
             <a href="${link}" style="color: #007bff; font-weight: bold; text-decoration: none;">Definir minha senha</a>
             <br><br>

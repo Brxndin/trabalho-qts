@@ -275,7 +275,6 @@ export class MedicoRepository {
             // # to do
             // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
             // senha: 'senha',
-            // cpf deverá ter validação pra não duplicar
             cpf: 'cpf',
             endereco: 'endereco',
             telefone: 'telefone',

@@ -42,8 +42,20 @@ export class PacienteController {
         try {
             const { nome, email, cpf, dataNascimento } = req.body;
 
-            if (!nome || !email || !cpf || !dataNascimento) {
-                throw new CustomError('Nome, E-mail, CPF e Data de Nascimento são obrigatórios!', 400);
+            if (!nome) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+
+            if (!email) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (!cpf) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (!dataNascimento) {
+                throw new CustomError('Data de Nascimento é obrigatória!', 400);
             }
 
             let dataNascimentoTratada = dayjs(dataNascimento);
@@ -108,7 +120,23 @@ export class PacienteController {
                 throw new CustomError('O paciente informado não existe!', 404);
             }
 
-            const { email, cpf, dataNascimento } = req.body;
+            const { nome, email, cpf, dataNascimento } = req.body;
+
+            if (nome !== undefined && nome === null) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+
+            if (email !== undefined && email === null) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (cpf !== undefined && cpf === null) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (dataNascimento !== undefined && dataNascimento === null) {
+                throw new CustomError('Data de Nascimento é obrigatória!', 400);
+            }
 
             let dataNascimentoTratada = dayjs(dataNascimento);
 

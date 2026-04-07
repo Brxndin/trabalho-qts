@@ -41,8 +41,20 @@ export class MedicoController {
         try {
             const { nome, email, cpf, crm } = req.body;
 
-            if (!nome || !email || !cpf || !crm) {
-                throw new CustomError('Nome, E-mail, CPF e CRM são obrigatórios!', 400);
+            if (!nome) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+            
+            if (!email) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (!cpf) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (!crm) {
+                throw new CustomError('CRM é obrigatório!', 400);
             }
 
             // valida se já há médico com esse email e cpf
@@ -89,13 +101,27 @@ export class MedicoController {
 
             const medico = await this.medicoRepository.findById(id);
 
-            // to do
-            // verificar regras específicas de médicos (se tiver alguma)
             if (!medico) {
                 throw new CustomError('O médico informado não existe!', 404);
             }
 
-            const { email, cpf } = req.body;
+            const { nome, email, cpf, crm } = req.body;
+
+            if (nome !== undefined && nome === null) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+            
+            if (email !== undefined && email === null) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (cpf !== undefined && cpf === null) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (crm !== undefined && crm === null) {
+                throw new CustomError('CRM é obrigatório!', 400);
+            }
 
             let usuario = null;
 

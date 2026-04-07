@@ -41,8 +41,20 @@ export class FuncionarioController {
         try {
             const { nome, email, cpf, funcao } = req.body;
 
-            if (!nome || !email || !cpf || !funcao) {
-                throw new CustomError('Nome, E-mail, CPF e Função são obrigatórios!', 400);
+            if (!nome) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+
+            if (!email) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (!cpf) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (!funcao) {
+                throw new CustomError('Função é obrigatória!', 400);
             }
 
             // valida se já há funcionario com esse email e cpf
@@ -93,7 +105,23 @@ export class FuncionarioController {
                 throw new CustomError('O funcionário informado não existe!', 404);
             }
 
-            const { email, cpf } = req.body;
+            const { nome, email, cpf, funcao } = req.body;
+
+            if (nome !== undefined && nome === null) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+
+            if (email !== undefined && email === null) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (cpf !== undefined && cpf === null) {
+                throw new CustomError('CPF é obrigatório!', 400);
+            }
+
+            if (funcao !== undefined && funcao === null) {
+                throw new CustomError('Função é obrigatória!', 400);
+            }
 
             let usuario = null;
 

@@ -120,12 +120,12 @@ export class UsuarioRepository {
                     telefone: data.telefone,
                 });
 
-            const tipos = data.tipos.map((tipo) => ({
-                usuario_id: usuarioId,
-                tipo: tipo
-            }));
-
-            await trx('usuarios_tipos').insert(tipos);
+            // somente administradores são cadastrados diretamente
+            await trx('usuarios_tipos')
+                .insert({
+                    usuario_id: usuarioId,
+                    tipo: Usuario.tipos.ADM
+                });
 
             // token pra recuperação de senha ou primeiro acesso
             const token = await this.createToken(usuarioId, trx);
@@ -153,10 +153,6 @@ export class UsuarioRepository {
 
     async delete(id) {
         return await knex.transaction(async (trx) => {
-            // # to do
-            // verificar quais dados podem ser removidos e quais não
-            // isso por que, se não permitir remover consultas, da pra tirar daqui, mas terá que ter validação pra jogar um erro tratado
-            // se não for tratado, vai ir um erro de sql dizendo que o usuário ainda tem relação em tabelas
             await trx('consultas')
                 .where('consultas.usuario_id', id)
                 .delete();

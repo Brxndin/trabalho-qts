@@ -1,5 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { Usuario } from '../models/Usuario.js';
 
 export class UsuarioController {
     constructor(usuarioRepository) {
@@ -37,18 +38,22 @@ export class UsuarioController {
 
     store = async (req, res, next) => {
         try {
-            const { nome, email, tipos, senha } = req.body;
+            const { nome, email, senha } = req.body;
 
-            // necessário validar os tipos, que será um array
-            // esse array servirá para definir se vai criar médicos, funcionários ou pacientes
-            // ou seja, ao criar ou buscar o usuário, deverá consultar a tabela de ligação e colocar na model
-            // isso faz com que a model e a tabela no banco não dependam um do outro pois não tem a exata estrutura
-            if (!nome || !email || !senha) {
-                throw new CustomError('Nome, E-mail e Senha são obrigatórios!', 400);
+            if (!nome) {
+                throw new CustomError('Nome é obrigatório!', 400);
             }
 
-            if (tipos.length <= 0) {
-                throw new CustomError('Informe ao menos um Tipo para o usuário!', 400);
+            if (!email) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (!senha) {
+                throw new CustomError('Senha é obrigatória!', 400);
+            }
+
+            if (senha.length < 7) {
+                throw new CustomError('A senha deve ter no mínimo 7 dígitos!', 400);
             }
 
             const userId = await this.usuarioRepository.create(req.body);
@@ -79,7 +84,24 @@ export class UsuarioController {
                 throw new CustomError('O usuário informado não existe!', 404);
             }
 
-            const { email, cpf } = req.body;
+            // rotas diretas de usuários servem somente para administradores
+            if (!usuario.tipos.includes(Usuario.tipos.ADM)) {
+                throw new CustomError('Não é possível editar usuários que não são administradores!', 400);
+            }
+
+            const { nome, email, senha, cpf } = req.body;
+
+            if (nome !== undefined && nome === null) {
+                throw new CustomError('Nome é obrigatório!', 400);
+            }
+
+            if (email !== undefined && email === null) {
+                throw new CustomError('E-mail é obrigatório!', 400);
+            }
+
+            if (senha !== undefined && senha === null) {
+                throw new CustomError('Senha é obrigatória!', 400);
+            }
 
             if (email) {
                 usuario = await this.usuarioRepository.findByEmail(email, id);
@@ -95,6 +117,10 @@ export class UsuarioController {
                 if (usuario) {
                     throw new CustomError('O CPF informado não pode ser usado!', 400);
                 }
+            }
+
+            if (senha && senha.length < 7) {
+                throw new CustomError('A senha deve ter no mínimo 7 dígitos!', 400);
             }
 
             const linhasAfetadas = await this.usuarioRepository.update(id, req.body);
@@ -126,11 +152,19 @@ export class UsuarioController {
                 throw new CustomError('O usuário não pode se excluir!', 400);
             }
 
-            // to do
-            // verificar regras específicas de usuário
-            // exemplo: não da pra remover pacientes que tem consultas relacionadas
-            // isso por que consultas não podem ser removidas
-            // na verdade, o próprio usuário não pode ser removido, então apesar de ter a função, não será acessada
+            const usuario = await this.usuarioRepository.findById(id);
+
+            if (!usuario) {
+                throw new CustomError('O usuário informado não existe!', 404);
+            }
+
+            if (!usuario.tipos.includes(Usuario.tipos.ADM)) {
+                throw new CustomError('Não é possível excluir usuários que não são administradores!', 400);
+            }
+
+            if (usuario.tipos.length > 1) {
+                throw new CustomError('Não é possível remover usuários que, além de administradores, são médicos, funcionários ou pacientes!', 400);
+            }
 
             const linhasAfetadas = await this.usuarioRepository.delete(id);
 

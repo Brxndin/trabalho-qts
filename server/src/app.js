@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -14,7 +15,7 @@ import errorHandler from './middlewares/errorHandler.js';
 const app = express();
 
 app.use(cors({
-    // origin: 'https://rota-front.com',
+    origin: `http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}`,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));

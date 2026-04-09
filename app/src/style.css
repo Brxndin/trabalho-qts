@@ -1,0 +1,134 @@
+html, body, #root {
+    font-family: Arial;
+    color: #333;
+    
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    gap: 15px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+}
+
+footer {
+    padding: 10px;
+    background-color: #ebebeb;
+    text-align: center;
+}
+
+.list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.list-table-cell {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.list-table-line:nth-child(even) {
+  background-color: #ebebeb;
+}
+
+.list-table-line:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.list-table-header .list-table-header-cell {
+  background-color: #333;
+  color: white;
+}
+
+input {
+    width: 230px;
+    border: 1px solid #333;
+    height: 25px;
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 230px;
+    border: 1px solid #333;
+    height: 100px;
+    margin-bottom: 10px;
+    resize: none;
+}
+
+select {
+    width: 235px;
+    background-color: #fff;
+    border: 1px solid #333;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+button {
+    width: 235px;
+    height: 25px;
+    border: 1px solid #fff;
+    color: #fff;
+    background-color: #333;
+}
+
+label {
+    display: block;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.post-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.post {
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.post-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-header {
+    background-color: #333;
+    font-size: 20px;
+    color: #fff;
+    height: 30px;
+}
+
+.post-body {
+    background-color: #fff;
+    color: #333;
+    height: 190px;
+}
+
+.post-footer {
+    background-color: #333;
+    color: #fff;
+    height: 20px;
+}
+
+#form-error-message {
+    color: red;
+}

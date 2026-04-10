@@ -63,7 +63,9 @@ export class AuthController {
 
     definirSenha = async (req, res, next) => {
         try {
-            const { token, senha } = req.body;
+            const token = parseInt(req.params.token);
+
+            const { senha } = req.body;
 
             // # to do
             // verificar sobre isso, mas acho interessante a regra

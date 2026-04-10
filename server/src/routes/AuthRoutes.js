@@ -9,7 +9,7 @@ const usuarioRepository = new UsuarioRepository();
 const authController = new AuthController(usuarioRepository);
 
 router.post('/login', authController.login);
-router.post('/definir-senha', authController.definirSenha);
+router.post('/definir-senha/:token', authController.definirSenha);
 router.post('/enviar-email-troca-senha', authController.enviarEmailTrocaSenha);
 
 export default router;

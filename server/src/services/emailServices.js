@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 // envia e-mail de primeiro acesso ou de recuperação de senha
 export async function enviarEmailDefinicaoSenha(email, token, tipoEmail = 'registro') {
-    const link = `http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/criar-senha?token=${token}`;
+    const link = `http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/definir-senha?token=${token}`;
 
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,

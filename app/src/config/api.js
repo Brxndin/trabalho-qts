@@ -1,7 +1,8 @@
 import axios from "axios";
+import { router } from "../router";
 
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:8080",
 });
 
 // aqui intercepta o envio da request, colocando o token
@@ -27,14 +28,14 @@ api.interceptors.response.use((res) => res, async (error) => {
         localStorage.removeItem("auth");
         
         if (window.location.pathname !== "/login") {
-            window.location.assign("/login");
+            router.navigate("/login");
         }
     }
 
     // aqui é proibido
     // estou tratando para quando o recurso só é disponível para adm
     if (status === 403) {
-        window.location.assign("/forbidden");
+        router.navigate("/forbidden");
     }
 
     return Promise.reject(error);

@@ -6,6 +6,16 @@ Servidor e Aplicativo para listagem e manipulação de serviços e funcionários
 
 Desenvolvido para a cadeira de Qualidade e Teste de Software.
 
+# Tecnologias usadas
+
+- JavaScript
+- Express.js
+- React
+- Docker
+- Knex.js
+- MariaDB
+- Mailpit
+
 # Como usar
 
 ## /server

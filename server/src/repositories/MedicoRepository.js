@@ -108,7 +108,7 @@ export class MedicoRepository {
         });
     }
 
-    async findUsuarioByEmail(email, idMedicoAtual = nul) {
+    async findUsuarioByEmail(email, idMedicoAtual = null) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',
@@ -141,7 +141,7 @@ export class MedicoRepository {
         });
     }
 
-    async findUsuarioByCPF(cpf, idMedicoAtual = nul) {
+    async findUsuarioByCPF(cpf, idMedicoAtual = null) {
         const usuario = await knex('usuarios')
             .select(
                 'usuarios.*',

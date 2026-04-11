@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 import knex from '../config/knex.js';
-import { filtraDadosPermitidos } from '../helpers/customValidators.js';
+import { filtraDadosPermitidos, isEmptyObject } from '../helpers/customValidators.js';
 import { Paciente } from '../models/Paciente.js';
 import { Usuario } from '../models/Usuario.js';
 
@@ -20,7 +20,7 @@ export class PacienteRepository {
             id: paciente.id,
             nome: paciente.nome,
             cpf: paciente.cpf,
-            dataNascimento: paciente.data_nascimento,
+            dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
         }));
     }
@@ -45,7 +45,7 @@ export class PacienteRepository {
             id: paciente.id,
             nome: paciente.nome,
             cpf: paciente.cpf,
-            dataNascimento: paciente.data_nascimento,
+            dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
         });
     }
@@ -70,7 +70,7 @@ export class PacienteRepository {
             id: paciente.id,
             nome: paciente.nome,
             cpf: paciente.cpf,
-            dataNascimento: paciente.data_nascimento,
+            dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
         });
     }
@@ -95,7 +95,7 @@ export class PacienteRepository {
             id: paciente.id,
             nome: paciente.nome,
             cpf: paciente.cpf,
-            dataNascimento: paciente.data_nascimento,
+            dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
         });
     }

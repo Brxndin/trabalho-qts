@@ -111,7 +111,7 @@ export default function FormLayout({
       <h2>{title}</h2>
       {erro && <p id="form-error-message">Erro: {erro}</p>}
       <form onSubmit={handleSubmit}>
-        {componentsAndNames.map((value) => {
+        {componentsAndNames && componentsAndNames.map((value) => {
           return (
             <div>
               <label>{value.label}</label>

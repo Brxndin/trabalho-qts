@@ -1,6 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, isEmptyObject, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class FuncionarioController {
@@ -25,7 +25,7 @@ export class FuncionarioController {
             const { id } = req.params;
             const funcionario = await this.funcionarioRepository.findById(id);
 
-            if (!funcionario) {
+            if (isEmptyObject(funcionario)) {
                 throw new CustomError('Funcionário não encontrado.', 404);
             }
 
@@ -64,13 +64,13 @@ export class FuncionarioController {
             // valida se já há funcionario com esse email e cpf
             let funcionario = await this.funcionarioRepository.findByCPF(cpf);
 
-            if (funcionario) {
+            if (!isEmptyObject(funcionario)) {
                 throw new CustomError('Já existe um funcionário com o CPF informado!', 400);
             }
 
             funcionario = await this.funcionarioRepository.findByEmail(email);
 
-            if (funcionario) {
+            if (!isEmptyObject(funcionario)) {
                 throw new CustomError('Já existe um funcionário com o E-mail informado!', 400);
             }
 
@@ -105,7 +105,7 @@ export class FuncionarioController {
 
             const funcionario = await this.funcionarioRepository.findById(id);
 
-            if (!funcionario) {
+            if (isEmptyObject(funcionario)) {
                 throw new CustomError('O funcionário informado não existe!', 404);
             }
 
@@ -134,7 +134,7 @@ export class FuncionarioController {
 
                 usuario = await this.funcionarioRepository.findUsuarioByEmail(email, id);
 
-                if (usuario) {
+                if (!isEmptyObject(usuario)) {
                     throw new CustomError('O e-mail informado não pode ser usado!', 400);
                 }
             }
@@ -144,7 +144,7 @@ export class FuncionarioController {
 
                 usuario = await this.funcionarioRepository.findUsuarioByCPF(cpf, id);
 
-                if (usuario) {
+                if (!isEmptyObject(usuario)) {
                     throw new CustomError('O CPF informado não pode ser usado!', 400);
                 }
             }

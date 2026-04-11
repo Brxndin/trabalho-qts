@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
-import { isEmailValido, isSenhaValida } from '../helpers/customValidators.js';
+import { isEmailValido, isEmptyObject, isSenhaValida } from '../helpers/customValidators.js';
 
 export class AuthController {
     constructor(usuarioRepository) {
@@ -27,7 +27,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findByEmail(email);
 
-            if (!usuario) {
+            if (isEmptyObject(usuario)) {
                 throw new CustomError('Dados incorretos!', 400);
             }
 
@@ -40,7 +40,7 @@ export class AuthController {
             // valida a senha criptografada
             const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
-            if (!usuario || !senhaValida) {
+            if (isEmptyObject(usuario) || !senhaValida) {
                 throw new CustomError('Dados incorretos!', 400);
             }
 
@@ -97,7 +97,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findById(tokenEncontrado.usuario_id);
 
-            if (!usuario) {
+            if (isEmptyObject(usuario)) {
                 throw new CustomError('Erro ao buscar o usuário!', 400);
             }
 
@@ -128,7 +128,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findByEmail(email);
 
-            if (!usuario) {
+            if (isEmptyObject(usuario)) {
                 throw new CustomError('Erro ao buscar usuário com o e-mail informado!', 400);
             }
 

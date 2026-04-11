@@ -36,7 +36,7 @@ export default function ListLayout({
       .get(linkGetData)
       .then((res) => {
         setData((prevState) => {
-          return [...prevState, ...res.data];
+          return [...prevState, ...res.data.data];
         });
       })
       .catch((error) => {

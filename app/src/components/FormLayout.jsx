@@ -40,7 +40,7 @@ export default function FormLayout({
       api
         .get(`${linkGetData}/${id}`)
         .then((res) => {
-          setData(res.data);
+          setData(res.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -52,12 +52,8 @@ export default function FormLayout({
     authState,
     navigate,
     authPermission,
-    adminCreatePermission,
-    funcionarioCreatePermission,
-    medicoCreatePermission,
-    adminUpdatePermission,
-    funcionarioUpdatePermission,
-    medicoUpdatePermission,
+    createPermission,
+    updatePermission,
   ]);
 
   const handleSubmit = (e) => {
@@ -72,7 +68,7 @@ export default function FormLayout({
           alert(dadosRetorno.message);
 
           if (afterSubmitSuccesFunction) {
-            afterSubmitSuccesFunction(dadosRetorno);
+            afterSubmitSuccesFunction(dadosRetorno.data);
           }
         })
         .catch((error) => {
@@ -89,7 +85,7 @@ export default function FormLayout({
           alert(dadosRetorno.message);
 
           if (afterSubmitSuccesFunction) {
-            afterSubmitSuccesFunction(dadosRetorno);
+            afterSubmitSuccesFunction(dadosRetorno.data);
           }
 
           setData({});

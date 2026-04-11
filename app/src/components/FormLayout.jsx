@@ -124,27 +124,30 @@ export default function FormLayout({
                 <input
                   type={value.type}
                   name={value.name}
-                  value={data[value.name] || ""}
+                  value={data[value.name] || value.value || ""}
                   placeholder={value?.placeholder || ""}
                   onChange={handleChange}
                   required={value.required || false}
+                  disabled={value.disabled || false}
                 />
               )}
               {value.type == "textarea" && (
                 <textarea
                   name={value.name}
-                  value={data[value.name] || ""}
+                  value={data[value.name] || value.value || ""}
                   placeholder={value?.placeholder || ""}
                   onChange={handleChange}
                   required={value.required || false}
+                  disabled={value.disabled || false}
                 />
               )}
               {value.type == "select" && (
                 <select
                   name={value.name}
-                  value={data[value.name] || ""}
+                  value={data[value.name] || value.value || ""}
                   onChange={handleChange}
                   required={value.required || false}
+                  disabled={value.disabled || false}
                 >
                   <option value={null}>Selecione</option>
                   {value.options.map((option) => {

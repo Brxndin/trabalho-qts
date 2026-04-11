@@ -83,7 +83,7 @@ export function isCPFValido(cpf) {
 
         let resto = soma % 11;
 
-        if (resto > 2) {
+        if (resto >= 2) {
             novoDigitoVerificador = `${11 - resto}`;
         }
 

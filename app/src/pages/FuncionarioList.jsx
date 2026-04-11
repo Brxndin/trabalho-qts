@@ -14,7 +14,6 @@ export default function FuncionarioList() {
           { column: "Função", nameInForm: "funcao" },
           { column: "Telefone", nameInForm: "telefone" },
           { column: "Endereço", nameInForm: "endereco" },
-          { column: "E-mail", nameInForm: "email" },
         ]}
         emptyMessage={"Não há nenhum funcionário cadastrado!"}
         linkShow={"/funcionarios/form"}

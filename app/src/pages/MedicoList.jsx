@@ -14,7 +14,6 @@ export default function MedicoList() {
           { column: "CRM", nameInForm: "crm" },
           { column: "Telefone", nameInForm: "telefone" },
           { column: "Endereço", nameInForm: "endereco" },
-          { column: "E-mail", nameInForm: "email" },
         ]}
         emptyMessage={"Não há nenhum médico cadastrado!"}
         linkShow={"/medicos/form"}

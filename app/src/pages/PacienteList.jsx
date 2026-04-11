@@ -13,7 +13,6 @@ export default function PacienteList() {
           { column: "CPF", nameInForm: "cpf" },
           { column: "Telefone", nameInForm: "telefone" },
           { column: "Data de Nascimento", nameInForm: "dataNascimento" },
-          { column: "E-mail", nameInForm: "email" },
         ]}
         emptyMessage={"Não há nenhum paciente cadastrado!"}
         linkShow={"/pacientes/form"}

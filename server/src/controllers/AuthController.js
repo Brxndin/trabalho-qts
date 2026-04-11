@@ -17,7 +17,7 @@ export class AuthController {
             const usuario = await this.usuarioRepository.findByEmail(email);
 
             if (!usuario) {
-                throw new CustomError('Dados incorretos!', 500);
+                throw new CustomError('Dados incorretos!', 400);
             }
 
             // a senha é salva nula ao cadastrar o usuário
@@ -30,7 +30,7 @@ export class AuthController {
             const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
             if (!usuario || !senhaValida) {
-                throw new CustomError('Dados incorretos!', 500);
+                throw new CustomError('Dados incorretos!', 400);
             }
 
             // aqui chamo de payload mas é o que vai ser transformado em token

@@ -221,7 +221,7 @@ export class MedicoRepository {
                     .insert({
                         nome: data.nome,
                         email: data.email,
-                        // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+                        // é gerado um e-mail e a pessoa escolhe quando acessar o link
                         // senha: data.senha,
                         cpf: data.cpf,
                         endereco: data.endereco,
@@ -272,8 +272,7 @@ export class MedicoRepository {
         const dadosFiltradosUsuario = filtraDadosPermitidos(data, {
             nome: 'nome',
             email: 'email',
-            // # to do
-            // sobre a senha, será melhor gerar um e-mail e mandar pra pessoa escolher quando ela quiser
+            // para trocar a senha, é necessário usar a opção "Esqueci a senha"
             // senha: 'senha',
             cpf: 'cpf',
             endereco: 'endereco',

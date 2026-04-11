@@ -48,8 +48,6 @@ export class AuthController {
             const payload = {
                 id: usuario.id,
                 name: usuario.nome,
-                // # to do
-                // verificar se vai ser um pra cada login ou se pode ser todos ao mesmo tempo
                 role: usuario.tipos,
             };
 

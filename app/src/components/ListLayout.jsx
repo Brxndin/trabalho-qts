@@ -64,7 +64,9 @@ export default function ListLayout({
     let bool = false;
 
     columnsAndNames.map((value) => {
-      bool = bool || (item[value.nameInForm].toLowerCase().includes(search.toLowerCase()));
+      if (item[value.nameInForm]) {
+        bool = bool || (item[value.nameInForm].toLowerCase().includes(search.toLowerCase()));
+      }
     })
 
     return bool;

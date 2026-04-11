@@ -142,7 +142,8 @@ export class ConsultaRepository {
         return await knex.transaction(async (trx) => {
             const [id] = await trx('consultas')
                 .insert({
-                    codigo: data.codigo,
+                    // to do
+                    // codigo: data.codigo,
                     data_hora_atendimento: data.dataHoraAtendimento,
                     paciente_id: data.pacienteId,
                     medico_id: data.medicoId,

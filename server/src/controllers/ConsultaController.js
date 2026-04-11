@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { isCPFValido, isEmptyObject } from '../helpers/customValidators.js';
 
 export class ConsultaController {
     constructor(consultaRepository) {
@@ -27,7 +28,7 @@ export class ConsultaController {
             // o médico logado só pode ver as próprias consultas
             const consulta = await this.consultaRepository.findById(id, req.userPayload.id);
 
-            if (!consulta) {
+            if (isEmptyObject(consulta)) {
                 throw new CustomError('Consulta não encontrada.', 404);
             }
 
@@ -43,47 +44,79 @@ export class ConsultaController {
         try {
             const {
                 codigo,
-                dataHoraAtendimento,
                 pacienteCPF,
                 medicoCPF,
+                peso,
+                temperatura,
                 descricaoSintomas,
                 diagnosticoETratamentoSugerido,
                 statusPagamento
             } = req.body;
 
             // to do
-            // verificar sobre código, como vai funcionar, se gera no momento que entra na tela, no momento do salvamento
-            // importante ver que, se outra pessoa abrir a mesma tela, há uma chance pequena de o código gerado ser igual e, quando for salvar vai dar erro de repetição
+            // gerar o código no momento de salvar o registro
+            // importante validar pra ser único
+            // verificar se deve ser uma hash, algo baseado em datas ou se é sequencial através do banco de dados 
+            
+            // if (!codigo) {
+            //     throw new CustomError('Código é obrigatório!', 400);
+            // }
 
-            // verificar para criar um helper que liste os obrigatórios em formato singular ao invés de todos juntos
-            if (!codigo || !dataHoraAtendimento || !medicoCPF || !pacienteCPF || !descricaoSintomas || !diagnosticoETratamentoSugerido || !statusPagamento) {
-                throw new CustomError('Código, Data e Hora de Atendimento, CPF do Médico, CPF do Paciente, Descrição dos Sintomas, Diagnóstico e Tratamento Sugerido e Status do Pagamento são obrigatórios!', 400);
+            if (!medicoCPF) {
+                throw new CustomError('CPF do Médico é obrigatório!', 400);
+            }
+
+            isCPFValido(medicoCPF);
+
+            if (!pacienteCPF) {
+                throw new CustomError('CPF do Paciente é obrigatório!', 400);
+            }
+
+            isCPFValido(pacienteCPF);
+
+            if (!peso) {
+                throw new CustomError('Peso é obrigatório!', 400);
+            }
+
+            if (!temperatura) {
+                throw new CustomError('Temperatura é obrigatória!', 400);
+            }
+
+            if (!descricaoSintomas) {
+                throw new CustomError('Descrição dos Sintomas é obrigatória!', 400);
+            }
+
+            if (!diagnosticoETratamentoSugerido) {
+                throw new CustomError('Diagnóstico e Tratamento Sugerido são obrigatórios!', 400);
+            }
+
+            if (!statusPagamento) {
+                throw new CustomError('Status do Pagamento é obrigatório!', 400);
             }
             
             if (medicoCPF == pacienteCPF) {
                 throw new CustomError('O médico e o paciente não podem ser a mesma pessoa!', 400);
             }
 
-            let dataHoraAtendimentoTratada = dayjs(dataHoraAtendimento);
-
-            if (!dataHoraAtendimentoTratada.isValid()) {
-                throw new CustomError('A data e hora de atendimento está num formato inválido!', 400);
-            }
-
             const medico = this.consultaRepository.findMedicoByCPF(medicoCPF);
 
-            if (!medico) {
+            if (isEmptyObject(medico)) {
                 throw new CustomError('O médico informado não foi encontrado!', 404);
             }
 
             const paciente = this.consultaRepository.findPacienteByCPF(pacienteCPF);
 
-            if (!paciente) {
+            if (isEmptyObject(paciente)) {
                 throw new CustomError('O paciente informado não foi encontrado!', 404);
             }
 
             req.body.medicoId = medico.id;
             req.body.pacienteId = paciente.id;
+            req.body.dataHoraAtendimento = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+            // to do
+            // criar função para gerar
+            // req.body.codigo = null;
 
             const consultaId = await this.consultaRepository.create(req.body);
 

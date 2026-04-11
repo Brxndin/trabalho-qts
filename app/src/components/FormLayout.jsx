@@ -6,12 +6,14 @@ import { useAuth } from "../auth/AuthContext";
 // aqui eu decidi fazer um form padrão pra não repetir o código tantas vezes
 export default function FormLayout({
   title,
+  description,
   componentsAndNames,
   submitButtonText,
   linkReturn,
   linkGetData,
   linkStore,
   linkUpdate,
+  extraLinks,
   afterSubmitSuccesFunction,
   authPermission,
   createPermission,
@@ -109,6 +111,7 @@ export default function FormLayout({
   return (
     <>
       <h2>{title}</h2>
+      <h3>{description}</h3>
       {erro && <p id="form-error-message">Erro: {erro}</p>}
       <form onSubmit={handleSubmit}>
         {componentsAndNames && componentsAndNames.map((value) => {
@@ -151,6 +154,9 @@ export default function FormLayout({
               )}
             </div>
           );
+        })}
+        {extraLinks && extraLinks.map((value) => {
+          return <p onClick={() => navigate(value.href)} className="form-link">{value.text}</p>
         })}
         <button type="submit" id="form-submit-button">
           {submitButtonText}

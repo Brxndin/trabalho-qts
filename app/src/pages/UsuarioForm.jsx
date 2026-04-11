@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
 import FormLayout from "../components/FormLayout";
+import { useAuth } from "../auth/AuthContext";
 
 export default function UsuarioForm() {
   const { id } = useParams();
+  const { authState } = useAuth();
 
   return (
     <div>

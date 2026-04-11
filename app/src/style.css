@@ -132,3 +132,8 @@ label {
 #form-error-message {
     color: red;
 }
+
+.form-link {
+    text-decoration: underline;
+    cursor: pointer;
+}

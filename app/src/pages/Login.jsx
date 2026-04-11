@@ -25,6 +25,9 @@ export default function Login() {
         ]}
         submitButtonText={'Entrar'}
         linkStore={'/auth/login'}
+        extraLinks={[
+          { href: '/recuperar-senha', text: 'Esqueci minha senha' },
+        ]}
         afterSubmitSuccesFunction={(dadosRetorno) => {
           setAuthState({
             token: dadosRetorno.token,
@@ -32,6 +35,8 @@ export default function Login() {
             auth: dadosRetorno.auth,
           });
         }}
+        updatePermission={true}
+        createPermission={true}
       />
     </div>
   );

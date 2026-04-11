@@ -10,7 +10,7 @@ export class ConsultaController {
     index = async (req, res, next) => {
         try {
             // o médico logado só pode ver as próprias consultas
-            const consultas = await this.consultaRepository.findAll(req.payload.id);
+            const consultas = await this.consultaRepository.findAll(req.userPayload.id);
 
             return customSuccess(res, {
                 data: consultas
@@ -25,7 +25,7 @@ export class ConsultaController {
             const { id } = req.params;
 
             // o médico logado só pode ver as próprias consultas
-            const consulta = await this.consultaRepository.findById(id, req.payload.id);
+            const consulta = await this.consultaRepository.findById(id, req.userPayload.id);
 
             if (!consulta) {
                 throw new CustomError('Consulta não encontrada.', 404);

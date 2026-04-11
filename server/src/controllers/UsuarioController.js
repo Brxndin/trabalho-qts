@@ -153,7 +153,7 @@ export class UsuarioController {
             }
             
             // impede que um usuário (como o administrador) se exclua
-            if (id == req.payload.id) {
+            if (id == req.userPayload.id) {
                 throw new CustomError('O usuário não pode se excluir!', 400);
             }
 

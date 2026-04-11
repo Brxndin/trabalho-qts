@@ -63,7 +63,7 @@ export class AuthController {
 
     definirSenha = async (req, res, next) => {
         try {
-            const token = parseInt(req.params.token);
+            const token = req.params.token;
 
             const { senha } = req.body;
 

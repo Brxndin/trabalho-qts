@@ -9,8 +9,8 @@ export async function seed(knex) {
     const [usuarioId] = await knex('usuarios').insert({
         nome: 'Administrador',
         email: 'admin@ifrs.edu.br',
-        // senha: 12345678
-        senha: '$2a$12$zpCIf21cwAq.kO1.4bpdEekHjIVKiXhY7GW/JV7ugEeuemPTX49HG',
+        // senha: Senha.123
+        senha: '$2b$12$fkCox86SvdMTzA7c6XDWLuIEBeq7fPa2ST3Uql8iY5sFkgD/9erXi',
         cpf: null,
         endereco: null,
         telefone: null,

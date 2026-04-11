@@ -28,3 +28,5 @@ Para usar o app, são necessários alguns passos para instalar as dependências 
 - Entre na pasta usando `cd app`.
 - Instale as dependências do node usando o comando `npm i`.
 - Inicie o servidor usando o comando `npm start` ou `npm run dev` (para ambiente de desenvolvimento). 
+
+Após isso, se tudo deu certo, será mostrado o link de acesso ao servidor, que roda no port 5173, padrão do React.

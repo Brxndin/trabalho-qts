@@ -25,7 +25,7 @@ export default function RecuperarSenhaForm() {
         ]}
         submitButtonText={'Enviar'}
         linkStore={'/auth/enviar-email-troca-senha'}
-        afterSubmitSuccesFunction={(dadosRetorno) => {
+        afterSubmitSuccesFunction={() => {
           navigate('/login');
         }}
         updatePermission={true}

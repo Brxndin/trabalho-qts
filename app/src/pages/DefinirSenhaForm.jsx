@@ -28,7 +28,7 @@ export default function DefinirSenhaForm() {
         ]}
         submitButtonText={'Atualizar'}
         linkStore={`/auth/definir-senha/${token}`}
-        afterSubmitSuccesFunction={(dadosRetorno) => {
+        afterSubmitSuccesFunction={() => {
           navigate('/login');
         }}
         updatePermission={true}

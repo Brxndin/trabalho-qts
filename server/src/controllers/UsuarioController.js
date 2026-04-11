@@ -1,5 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { isCPFValido, isEmailValido, isSenhaValida } from '../helpers/customValidators.js';
 import { Usuario } from '../models/Usuario.js';
 
 export class UsuarioController {
@@ -48,13 +49,13 @@ export class UsuarioController {
                 throw new CustomError('E-mail é obrigatório!', 400);
             }
 
+            isEmailValido(email);
+
             if (!senha) {
                 throw new CustomError('Senha é obrigatória!', 400);
             }
 
-            if (senha.length < 7) {
-                throw new CustomError('A senha deve ter no mínimo 7 dígitos!', 400);
-            }
+            isSenhaValida(senha);
 
             const userId = await this.usuarioRepository.create(req.body);
 
@@ -104,6 +105,8 @@ export class UsuarioController {
             }
 
             if (email) {
+                isEmailValido(email);
+
                 usuario = await this.usuarioRepository.findByEmail(email, id);
 
                 if (usuario) {
@@ -112,6 +115,8 @@ export class UsuarioController {
             }
 
             if (cpf) {
+                isCPFValido(cpf);
+
                 usuario = await this.usuarioRepository.findByCPF(cpf, id);
 
                 if (usuario) {
@@ -119,8 +124,8 @@ export class UsuarioController {
                 }
             }
 
-            if (senha && senha.length < 7) {
-                throw new CustomError('A senha deve ter no mínimo 7 dígitos!', 400);
+            if (senha) {
+                isSenhaValida(senha);
             }
 
             const linhasAfetadas = await this.usuarioRepository.update(id, req.body);

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class PacienteController {
@@ -50,9 +50,13 @@ export class PacienteController {
                 throw new CustomError('E-mail é obrigatório!', 400);
             }
 
+            isEmailValido(email);
+
             if (!cpf) {
                 throw new CustomError('CPF é obrigatório!', 400);
             }
+
+            isCPFValido(cpf);
 
             if (!dataNascimento) {
                 throw new CustomError('Data de Nascimento é obrigatória!', 400);
@@ -155,6 +159,8 @@ export class PacienteController {
             let usuario = null;
 
             if (email) {
+                isEmailValido(email);
+
                 usuario = await this.pacienteRepository.findUsuarioByEmail(email, id);
 
                 if (usuario) {
@@ -163,6 +169,8 @@ export class PacienteController {
             }
 
             if (cpf) {
+                isCPFValido(cpf);
+
                 usuario = await this.pacienteRepository.findUsuarioByCPF(cpf, id);
 
                 if (usuario) {

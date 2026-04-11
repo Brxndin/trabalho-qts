@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
+import { isEmailValido, isSenhaValida } from '../helpers/customValidators.js';
 
 export class AuthController {
     constructor(usuarioRepository) {
@@ -13,6 +14,16 @@ export class AuthController {
     login = async (req, res, next) => {
         try {
             const { email, senha } = req.body;
+
+            if (!email) {
+                throw new CustomError('O e-mail é obrigatório!');
+            }
+
+            isEmailValido(email);
+
+            if (!senha) {
+                throw new CustomError('A senha é obrigatória!');
+            }
 
             const usuario = await this.usuarioRepository.findByEmail(email);
 
@@ -67,12 +78,7 @@ export class AuthController {
 
             const { senha } = req.body;
 
-            // # to do
-            // verificar sobre isso, mas acho interessante a regra
-            // verificar se vale a pena usar regex pra ver sobre maiúisculas, minúsculas, números e símbolos
-            if (senha.length < 7) {
-                throw new CustomError('A senha deve ter no mínimo 7 dígitos!', 400);
-            }
+            isSenhaValida(senha);
 
             // # to do
             // verificar sobre o dado retornado, pois não está num objeto, é só o json que vem direito do banco

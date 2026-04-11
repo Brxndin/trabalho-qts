@@ -1,6 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class MedicoController {
@@ -49,9 +49,13 @@ export class MedicoController {
                 throw new CustomError('E-mail é obrigatório!', 400);
             }
 
+            isEmailValido(email);
+
             if (!cpf) {
                 throw new CustomError('CPF é obrigatório!', 400);
             }
+
+            isCPFValido(cpf);
 
             if (!crm) {
                 throw new CustomError('CRM é obrigatório!', 400);
@@ -126,6 +130,8 @@ export class MedicoController {
             let usuario = null;
 
             if (email) {
+                isEmailValido(email);
+
                 usuario = await this.medicoRepository.findUsuarioByEmail(email, id);
 
                 if (usuario) {
@@ -134,6 +140,8 @@ export class MedicoController {
             }
 
             if (cpf) {
+                isCPFValido(cpf);
+
                 usuario = await this.medicoRepository.findUsuarioByCPF(cpf, id);
 
                 if (usuario) {

@@ -1,6 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class FuncionarioController {
@@ -49,9 +49,13 @@ export class FuncionarioController {
                 throw new CustomError('E-mail é obrigatório!', 400);
             }
 
+            isEmailValido(email);
+
             if (!cpf) {
                 throw new CustomError('CPF é obrigatório!', 400);
             }
+
+            isCPFValido(cpf);
 
             if (!funcao) {
                 throw new CustomError('Função é obrigatória!', 400);
@@ -126,6 +130,8 @@ export class FuncionarioController {
             let usuario = null;
 
             if (email) {
+                isEmailValido(email);
+
                 usuario = await this.funcionarioRepository.findUsuarioByEmail(email, id);
 
                 if (usuario) {
@@ -134,6 +140,8 @@ export class FuncionarioController {
             }
 
             if (cpf) {
+                isCPFValido(cpf);
+
                 usuario = await this.funcionarioRepository.findUsuarioByCPF(cpf, id);
 
                 if (usuario) {

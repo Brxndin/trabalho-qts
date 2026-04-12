@@ -64,8 +64,10 @@ export default function ListLayout({
     let bool = false;
 
     columnsAndNames.map((value) => {
-      if (item[value.nameInForm]) {
-        bool = bool || (item[value.nameInForm].toLowerCase().includes(search.toLowerCase()));
+      let dadoColuna = item[value.nameInForm];
+
+      if (dadoColuna !== null && dadoColuna !== undefined) {
+        bool = bool || (String(dadoColuna).toLowerCase().includes(search.toLowerCase()));
       }
     })
 

@@ -13,6 +13,10 @@ export default function UsuarioForm() {
         componentsAndNames={[
           { label: "Nome", name: "nome", type: "text", placeholder: 'Informe o nome', required: true },
           { label: "E-mail", name: "email", type: "email", placeholder: 'Informe o e-mail', required: true },
+          // to do
+          // aqui deve ser uma lista de checkbox
+          // isso porque o usuário pode ser mais de um ao mesmo tempo
+          // verificar, na verdade, se essa tela vai ser usada em algum momento
           { label: "Tipo", name: "tipo", type: "select", required: true, options: [
             { value: 1, text: "Administrador" },
             { value: 2, text: "Médico" },

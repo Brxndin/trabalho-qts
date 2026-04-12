@@ -19,7 +19,6 @@ export default function UsuarioForm() {
             { value: 3, text: "Paciente" },
             { value: 4, text: "Funcionário" },
           ] },
-          { label: "Senha", name: "senha", type: "password", placeholder: 'Informe a senha', required: true },
         ]}
         submitButtonText={id ? 'Atualizar' : 'Cadastrar'}
         linkReturn={"/usuarios"}

@@ -114,7 +114,8 @@ export class UsuarioRepository {
                 .insert({
                     nome: data.nome,
                     email: data.email,
-                    senha: data.senha,
+                    // para definir a senha, é necessário acessar o link enviado por e-mail
+                    // senha: data.senha,
                     cpf: data.cpf,
                     endereco: data.endereco,
                     telefone: data.telefone,

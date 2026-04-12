@@ -78,9 +78,6 @@ export class AuthController {
 
             isSenhaValida(senha);
 
-            // # to do
-            // verificar sobre o dado retornado, pois não está num objeto, é só o json que vem direito do banco
-            // ou seja, não retorna uma model igual os outros
             const tokenEncontrado = await this.usuarioRepository.findToken(token);
 
             if (!tokenEncontrado) {

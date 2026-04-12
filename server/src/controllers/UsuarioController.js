@@ -39,7 +39,7 @@ export class UsuarioController {
 
     store = async (req, res, next) => {
         try {
-            const { nome, email, senha } = req.body;
+            const { nome, email } = req.body;
 
             if (!nome) {
                 throw new CustomError('Nome é obrigatório!', 400);
@@ -51,18 +51,18 @@ export class UsuarioController {
 
             isEmailValido(email);
 
-            if (!senha) {
-                throw new CustomError('Senha é obrigatória!', 400);
+            const [usuarioId, emailCadastrado, token] = await this.usuarioRepository.create(req.body);
+
+            let mensagemEmail = null;
+            
+            if (token) {
+                mensagemEmail = await enviarEmailDefinicaoSenha(emailCadastrado, token);
             }
 
-            isSenhaValida(senha);
-
-            const userId = await this.usuarioRepository.create(req.body);
-
             return customSuccess(res, {
-                message: 'Usuário criado com sucesso!',
+                message: multiConcat(' ', 'Usuário criado com sucesso!', mensagemEmail),
                 data: {
-                    id: userId,
+                    id: usuarioId,
                 },
                 statusCode: 201,
             });
@@ -90,7 +90,7 @@ export class UsuarioController {
                 throw new CustomError('Não é possível editar usuários que não são administradores!', 400);
             }
 
-            const { nome, email, senha, cpf } = req.body;
+            const { nome, email, cpf } = req.body;
 
             if (nome !== undefined && nome === null) {
                 throw new CustomError('Nome é obrigatório!', 400);
@@ -98,10 +98,6 @@ export class UsuarioController {
 
             if (email !== undefined && email === null) {
                 throw new CustomError('E-mail é obrigatório!', 400);
-            }
-
-            if (senha !== undefined && senha === null) {
-                throw new CustomError('Senha é obrigatória!', 400);
             }
 
             if (email) {
@@ -124,9 +120,8 @@ export class UsuarioController {
                 }
             }
 
-            if (senha) {
-                isSenhaValida(senha);
-            }
+            // a senha deve ser alterada somente pelo link enviado por e-mail
+            req.body.senha = undefined;
 
             const linhasAfetadas = await this.usuarioRepository.update(id, req.body);
 

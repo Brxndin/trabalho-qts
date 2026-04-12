@@ -1,6 +1,6 @@
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { isCPFValido, isEmailValido, isEmptyObject, multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class MedicoController {
@@ -25,7 +25,7 @@ export class MedicoController {
             const { id } = req.params;
             const medico = await this.medicoRepository.findById(id);
 
-            if (isEmptyObject(medico)) {
+            if (!medico) {
                 throw new CustomError('Médico não encontrado.', 404);
             }
 
@@ -64,13 +64,13 @@ export class MedicoController {
             // valida se já há médico com esse email e cpf
             let medico = await this.medicoRepository.findByCPF(cpf);
 
-            if (!isEmptyObject(medico)) {
+            if (medico) {
                 throw new CustomError('Já existe um médico com o CPF informado!', 400);
             }
 
             medico = await this.medicoRepository.findByEmail(email);
 
-            if (!isEmptyObject(medico)) {
+            if (medico) {
                 throw new CustomError('Já existe um médico com o E-mail informado!', 400);
             }
 
@@ -105,7 +105,7 @@ export class MedicoController {
 
             const medico = await this.medicoRepository.findById(id);
 
-            if (isEmptyObject(medico)) {
+            if (!medico) {
                 throw new CustomError('O médico informado não existe!', 404);
             }
 
@@ -134,7 +134,7 @@ export class MedicoController {
 
                 usuario = await this.medicoRepository.findUsuarioByEmail(email, id);
 
-                if (!isEmptyObject(usuario)) {
+                if (usuario) {
                     throw new CustomError('O e-mail informado não pode ser usado!', 400);
                 }
             }
@@ -144,7 +144,7 @@ export class MedicoController {
 
                 usuario = await this.medicoRepository.findUsuarioByCPF(cpf, id);
 
-                if (!isEmptyObject(usuario)) {
+                if (usuario) {
                     throw new CustomError('O CPF informado não pode ser usado!', 400);
                 }
             }

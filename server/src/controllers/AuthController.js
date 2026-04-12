@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
+import { isEmailValido, isSenhaValida } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
-import { isEmailValido, isEmptyObject, isSenhaValida } from '../helpers/customValidators.js';
 
 export class AuthController {
     constructor(usuarioRepository) {
@@ -27,7 +27,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findByEmail(email);
 
-            if (isEmptyObject(usuario)) {
+            if (!usuario) {
                 throw new CustomError('Dados incorretos!', 400);
             }
 
@@ -40,7 +40,7 @@ export class AuthController {
             // valida a senha criptografada
             const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
-            if (isEmptyObject(usuario) || !senhaValida) {
+            if (!usuario || !senhaValida) {
                 throw new CustomError('Dados incorretos!', 400);
             }
 
@@ -97,7 +97,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findById(tokenEncontrado.usuario_id);
 
-            if (isEmptyObject(usuario)) {
+            if (!usuario) {
                 throw new CustomError('Erro ao buscar o usuário!', 400);
             }
 
@@ -128,7 +128,7 @@ export class AuthController {
 
             const usuario = await this.usuarioRepository.findByEmail(email);
 
-            if (isEmptyObject(usuario)) {
+            if (!usuario) {
                 throw new CustomError('Erro ao buscar usuário com o e-mail informado!', 400);
             }
 

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { isCPFValido, isEmptyObject } from '../helpers/customValidators.js';
+import { isCPFValido } from '../helpers/customValidators.js';
 
 export class ConsultaController {
     constructor(consultaRepository) {
@@ -28,7 +28,7 @@ export class ConsultaController {
             // o médico logado só pode ver as próprias consultas
             const consulta = await this.consultaRepository.findById(id, req.userPayload.id);
 
-            if (isEmptyObject(consulta)) {
+            if (!consulta) {
                 throw new CustomError('Consulta não encontrada.', 404);
             }
 
@@ -100,13 +100,13 @@ export class ConsultaController {
 
             const medico = await this.consultaRepository.findMedicoByCPF(medicoCPF);
 
-            if (isEmptyObject(medico)) {
+            if (!medico) {
                 throw new CustomError('O médico informado não foi encontrado!', 404);
             }
 
             const paciente = await this.consultaRepository.findPacienteByCPF(pacienteCPF);
 
-            if (isEmptyObject(paciente)) {
+            if (!paciente) {
                 throw new CustomError('O paciente informado não foi encontrado!', 404);
             }
 

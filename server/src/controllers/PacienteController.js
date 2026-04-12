@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { isCPFValido, isEmailValido, isEmptyObject, multiConcat } from '../helpers/customValidators.js';
+import { isCPFValido, isEmailValido, multiConcat } from '../helpers/customValidators.js';
 import { enviarEmailDefinicaoSenha } from '../services/emailServices.js';
 
 export class PacienteController {
@@ -26,7 +26,7 @@ export class PacienteController {
             const { id } = req.params;
             const paciente = await this.pacienteRepository.findById(id);
 
-            if (isEmptyObject(paciente)) {
+            if (!paciente) {
                 throw new CustomError('Paciente não encontrado.', 404);
             }
 
@@ -79,13 +79,13 @@ export class PacienteController {
             // valida se já há paciente com esse email e cpf
             let paciente = await this.pacienteRepository.findByCPF(cpf);
 
-            if (!isEmptyObject(paciente)) {
+            if (paciente) {
                 throw new CustomError('Já existe um paciente com o CPF informado!', 400);
             }
 
             paciente = await this.pacienteRepository.findByEmail(email);
 
-            if (!isEmptyObject(paciente)) {
+            if (paciente) {
                 throw new CustomError('Já existe um paciente com o E-mail informado!', 400);
             }
 
@@ -120,7 +120,7 @@ export class PacienteController {
 
             const paciente = await this.pacienteRepository.findById(id);
 
-            if (isEmptyObject(paciente)) {
+            if (!paciente) {
                 throw new CustomError('O paciente informado não existe!', 404);
             }
 
@@ -163,7 +163,7 @@ export class PacienteController {
 
                 usuario = await this.pacienteRepository.findUsuarioByEmail(email, id);
 
-                if (!isEmptyObject(usuario)) {
+                if (usuario) {
                     throw new CustomError('O e-mail informado não pode ser usado!', 400);
                 }
             }
@@ -173,7 +173,7 @@ export class PacienteController {
 
                 usuario = await this.pacienteRepository.findUsuarioByCPF(cpf, id);
 
-                if (!isEmptyObject(usuario)) {
+                if (usuario) {
                     throw new CustomError('O CPF informado não pode ser usado!', 400);
                 }
             }

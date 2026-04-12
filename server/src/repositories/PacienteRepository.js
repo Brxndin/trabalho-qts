@@ -197,20 +197,18 @@ export class PacienteRepository {
 
                 emailCadastrado = data.email;
             } else {
-                // # to do
-                // verificar para validar os dados enviados semelhante à função de update
+                const dadosFiltradosUsuario = filtraDadosPermitidos(data, {
+                    nome: 'nome',
+                    email: 'email',
+                    // para trocar a senha, é necessário usar a opção "Esqueci a senha"
+                    // senha: 'senha',
+                    cpf: 'cpf',
+                    telefone: 'telefone'
+                });
+
                 await trx('usuarios')
                     .where('usuarios.id', usuario.id)
-                    .update({
-                        nome: data.nome,
-                        // # to do
-                        // verificar se e-mail e cpf podem ser alterados
-                        // talvez seja interessante o front bloquear a edição desses
-                        // email: data.email,
-                        // cpf: data.cpf,
-                        endereco: data.endereco,
-                        telefone: data.telefone,
-                    })
+                    .update(dadosFiltradosUsuario)
 
                 usuarioId = usuario.id;
                 emailCadastrado = usuario.email;

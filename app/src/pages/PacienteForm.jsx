@@ -9,7 +9,7 @@ export default function PacienteForm() {
   return (
     <div>
       <FormLayout
-        title={'Cadastro de Pacientes'}
+        title={`${id ? 'Atualização' : 'Cadastro'} de Paciente`}
         componentsAndNames={[
           { label: "Nome", name: "nome", type: "text", placeholder: "Informe o nome", required: true },
           { label: "CPF", name: "cpf", type: "text", placeholder: "Informe o CPF", required: true },

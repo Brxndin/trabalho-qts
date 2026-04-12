@@ -9,7 +9,7 @@ export default function FuncionarioForm() {
   return (
     <div>
       <FormLayout
-        title={'Cadastro de Funcionários'}
+        title={`${id ? 'Atualização' : 'Cadastro'} de Funcionário`}
         componentsAndNames={[
           { label: "Nome", name: "nome", type: "text", placeholder: "Informe o nome", required: true },
           { label: "CPF", name: "cpf", type: "text", placeholder: "Informe o CPF", required: true },

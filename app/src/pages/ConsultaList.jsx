@@ -9,12 +9,18 @@ export default function ConsultaList() {
       <ListLayout
         title={'Listagem de Consultas'}
         columnsAndNames={[
-          { column: "Nome", nameInForm: "nome" },
-          { column: "CPF", nameInForm: "cpf" },
-          { column: "CRM", nameInForm: "crm" },
-          { column: "Telefone", nameInForm: "telefone" },
-          { column: "Endereço", nameInForm: "endereco" },
-          { column: "E-mail", nameInForm: "email" },
+          { column: "Código", nameInForm: "codigo" },
+          { column: "Nome do Médico", nameInForm: "medicoNome" },
+          { column: "CPF do Médico", nameInForm: "medicoCPF" },
+          { column: "CRM do Médico", nameInForm: "crm" },
+          { column: "Nome do Paciente", nameInForm: "pacienteNome" },
+          { column: "CPF do Paciente", nameInForm: "pacienteCPF" },
+          { column: "Peso", nameInForm: "peso" },
+          { column: "Temperatura", nameInForm: "temperatura" },
+          { column: "Data e Hora de Atendimento", nameInForm: "dataHoraAtendimento" },
+          { column: "Descrição dos Sintomas", nameInForm: "descricaoSintomas" },
+          { column: "Diagnóstico e Tratamento Sugerido", nameInForm: "diagnosticoETratamentoSugerido" },
+          { column: "Status do Pagamento", nameInForm: "statusPagamento" },
         ]}
         emptyMessage={"Não há nenhuma consulta cadastrada!"}
         linkShow={"/consultas/form"}

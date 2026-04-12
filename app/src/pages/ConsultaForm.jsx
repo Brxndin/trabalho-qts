@@ -28,7 +28,12 @@ export default function ConsultaForm() {
           { label: "Data e Hora de Atendimento", name: "dataHoraAtendimento", type: "datetime-local", value: dayjs().format('YYYY-MM-DD HH:mm:ss'), disabled: true },
           { label: "Descrição dos Sintomas", name: "descricaoSintomas", placeholder: "Descreva os sintomas do paciente", type: "textarea", required: true },
           { label: "Diagnóstico e Tratamento Sugerido", name: "diagnosticoETratamentoSugerido", placeholder: "Descreva o diagnóstico e o tratamento sugerido para o paciente", type: "textarea", required: true },
-          { label: "Status do Pagamento", name: "statusPagamento", placeholder: "Informe o status do pagamento", type: "text", required: true },
+          { label: "Status do Pagamento", name: "statusPagamento", placeholder: "Informe o status do pagamento", type: "select", required: true, options: [
+            { value: 1, text: "A Pagar" },
+            { value: 2, text: "Pago Parcialmente" },
+            { value: 3, text: "Atrasado" },
+            { value: 4, text: "Pago" },
+          ] },
           // verificar dados restantes
         ]}
         submitButtonText={id ? 'Atualizar' : 'Cadastrar'}

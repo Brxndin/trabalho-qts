@@ -1,8 +1,8 @@
+import dayjs from 'dayjs';
 import knex from '../config/knex.js';
 import { Consulta } from '../models/Consulta.js';
 import { Medico } from '../models/Medico.js';
 import { Paciente } from '../models/Paciente.js';
-import dayjs from 'dayjs';
 
 export class ConsultaRepository {
     async findAll(idUsuario = null) {
@@ -87,6 +87,35 @@ export class ConsultaRepository {
         });
     }
 
+    async findMedicoByUsuarioId(id) {
+        const medico = await knex('medicos')
+            .select(
+                'medicos.*',
+                'usuarios.nome',
+                'usuarios.cpf',
+                'usuarios.telefone',
+                'usuarios.endereco',
+                'usuarios.email',
+            )
+            .join('usuarios', 'usuarios.id', 'medicos.usuario_id')
+            .where('usuarios.id', id)
+            .first();
+
+        if (!medico || !medico?.id) {
+            return null;
+        }
+
+        return new Medico({
+            id: medico.id,
+            nome: medico.nome,
+            cpf: medico.cpf,
+            crm: medico.crm,
+            telefone: medico.telefone,
+            endereco: medico.endereco,
+            email: medico.email,
+        });
+    }
+
     async findMedicoByCPF(cpf) {
         const medico = await knex('medicos')
             .select(
@@ -95,6 +124,7 @@ export class ConsultaRepository {
                 'usuarios.cpf',
                 'usuarios.telefone',
                 'usuarios.endereco',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'medicos.usuario_id')
             .where('usuarios.cpf', cpf)
@@ -111,6 +141,7 @@ export class ConsultaRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+            email: medico.email,
         });
     }
 
@@ -121,6 +152,7 @@ export class ConsultaRepository {
                 'usuarios.nome',
                 'usuarios.cpf',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'pacientes.usuario_id')
             .where('usuarios.cpf', cpf)
@@ -136,6 +168,7 @@ export class ConsultaRepository {
             cpf: paciente.cpf,
             dataNascimento: paciente.data_nascimento,
             telefone: paciente.telefone,
+            email: paciente.email,
         });
     }
 

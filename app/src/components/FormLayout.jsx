@@ -15,6 +15,7 @@ export default function FormLayout({
   linkUpdate,
   extraLinks,
   afterSubmitSuccesFunction,
+  initialSetDataFunction,
   authPermission,
   createPermission,
   updatePermission,
@@ -48,6 +49,10 @@ export default function FormLayout({
           console.log(error);
         });
     }
+
+    if (!id && initialSetDataFunction) {
+      initialSetDataFunction(api, setData);
+    }
   }, [
     id,
     linkGetData,
@@ -56,6 +61,7 @@ export default function FormLayout({
     authPermission,
     createPermission,
     updatePermission,
+    initialSetDataFunction,
   ]);
 
   const handleSubmit = (e) => {
@@ -127,6 +133,8 @@ export default function FormLayout({
                   onChange={handleChange}
                   required={value.required || false}
                   disabled={value.disabled || false}
+                  readOnly={value.readOnly || false}
+                  onBlur={value.onBlur ? (() => value.onBlur(api, setData, data[value.name])) : null}
                 />
               )}
               {value.type == "textarea" && (
@@ -137,6 +145,8 @@ export default function FormLayout({
                   onChange={handleChange}
                   required={value.required || false}
                   disabled={value.disabled || false}
+                  readOnly={value.readOnly || false}
+                  onBlur={value.onBlur ? (() => value.onBlur(api, setData, data[value.name])) : null}
                 />
               )}
               {value.type == "select" && (

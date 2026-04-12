@@ -40,6 +40,48 @@ export class ConsultaController {
         }
     };
 
+    getMedico = async (req, res, next) => {
+        try {
+            const { usuarioId } = req.params;
+
+            const medico = await this.consultaRepository.findMedicoByUsuarioId(usuarioId);
+
+            if (!medico) {
+                throw new CustomError('Médico não encontrado.', 404);
+            }
+
+            return customSuccess(res, {
+                data: {
+                    medicoCPF: medico.cpf,
+                    medicoNome: medico.nome,
+                    crm: medico.crm,
+                },
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getPaciente = async (req, res, next) => {
+        try {
+            const { cpf } = req.params;
+
+            const paciente = await this.consultaRepository.findPacienteByCPF(cpf);
+
+            if (!paciente) {
+                throw new CustomError('Paciente não encontrado.', 404);
+            }
+
+            return customSuccess(res, {
+                data: {
+                    pacienteNome: paciente.nome,
+                },
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
     store = async (req, res, next) => {
         try {
             const {

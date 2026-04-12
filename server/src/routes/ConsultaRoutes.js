@@ -12,6 +12,8 @@ const consultaController = new ConsultaController(consultaRepository);
 
 router.get('/', verifyJWT, verifyMedico, consultaController.index);
 router.get('/:id', verifyJWT, verifyMedico, consultaController.show);
+router.get('/medico/:usuarioId', verifyJWT, verifyMedico, consultaController.getMedico);
+router.get('/paciente/:cpf', verifyJWT, verifyMedico, consultaController.getPaciente);
 router.post('/', verifyJWT, verifyMedico, consultaController.store);
 
 export default router;

@@ -2,6 +2,7 @@ import knex from '../config/knex.js';
 import { Consulta } from '../models/Consulta.js';
 import { Medico } from '../models/Medico.js';
 import { Paciente } from '../models/Paciente.js';
+import dayjs from 'dayjs';
 
 export class ConsultaRepository {
     async findAll(idUsuario = null) {
@@ -28,7 +29,7 @@ export class ConsultaRepository {
         return consultas.map((consulta) => new Consulta({
             id: consulta.id,
             codigo: consulta.codigo,
-            dataHoraAtendimento: consulta.data_hora_atendimento,
+            dataHoraAtendimento: dayjs(consulta.data_hora_atendimento).format('YYYY-MM-DD HH:mm:ss'),
             pacienteCPF: consulta.paciente_cpf,
             pacienteNome: consulta.paciente_nome,
             medicoCPF: consulta.medico_cpf,
@@ -142,8 +143,7 @@ export class ConsultaRepository {
         return await knex.transaction(async (trx) => {
             const [id] = await trx('consultas')
                 .insert({
-                    // to do
-                    // codigo: data.codigo,
+                    codigo: data.codigo,
                     data_hora_atendimento: data.dataHoraAtendimento,
                     paciente_id: data.pacienteId,
                     medico_id: data.medicoId,

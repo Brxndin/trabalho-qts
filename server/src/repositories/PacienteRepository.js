@@ -13,6 +13,7 @@ export class PacienteRepository {
                 'usuarios.nome',
                 'usuarios.cpf',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'pacientes.usuario_id');
 
@@ -22,6 +23,7 @@ export class PacienteRepository {
             cpf: paciente.cpf,
             dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
+            email: paciente.email,
         }));
     }
 
@@ -32,6 +34,7 @@ export class PacienteRepository {
                 'usuarios.nome',
                 'usuarios.cpf',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'pacientes.usuario_id')
             .where('pacientes.id', id)
@@ -47,6 +50,7 @@ export class PacienteRepository {
             cpf: paciente.cpf,
             dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
+            email: paciente.email,
         });
     }
 
@@ -57,6 +61,7 @@ export class PacienteRepository {
                 'usuarios.nome',
                 'usuarios.cpf',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'pacientes.usuario_id')
             .where('usuarios.cpf', cpf)
@@ -72,6 +77,7 @@ export class PacienteRepository {
             cpf: paciente.cpf,
             dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
+            email: paciente.email,
         });
     }
 
@@ -82,6 +88,7 @@ export class PacienteRepository {
                 'usuarios.nome',
                 'usuarios.cpf',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'pacientes.usuario_id')
             .where('usuarios.email', email)
@@ -97,6 +104,7 @@ export class PacienteRepository {
             cpf: paciente.cpf,
             dataNascimento: dayjs(paciente.data_nascimento).format('YYYY-MM-DD'),
             telefone: paciente.telefone,
+            email: paciente.email,
         });
     }
 

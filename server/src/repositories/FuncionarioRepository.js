@@ -14,6 +14,7 @@ export class FuncionarioRepository {
                 'usuarios.cpf',
                 'usuarios.endereco',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'funcionarios.usuario_id');
 
@@ -24,6 +25,7 @@ export class FuncionarioRepository {
             funcao: funcionario.funcao,
             telefone: funcionario.telefone,
             endereco: funcionario.endereco,
+            email: funcionario.email,
         }));
     }
 
@@ -35,6 +37,7 @@ export class FuncionarioRepository {
                 'usuarios.cpf',
                 'usuarios.endereco',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'funcionarios.usuario_id')
             .where('funcionarios.id', id)
@@ -51,6 +54,7 @@ export class FuncionarioRepository {
             funcao: funcionario.funcao,
             telefone: funcionario.telefone,
             endereco: funcionario.endereco,
+            email: funcionario.email,
         });
     }
 
@@ -62,6 +66,7 @@ export class FuncionarioRepository {
                 'usuarios.cpf',
                 'usuarios.telefone',
                 'usuarios.endereco',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'funcionarios.usuario_id')
             .where('usuarios.cpf', cpf)
@@ -78,6 +83,7 @@ export class FuncionarioRepository {
             funcao: funcionario.funcao,
             telefone: funcionario.telefone,
             endereco: funcionario.endereco,
+            email: funcionario.email,
         });
     }
 
@@ -89,6 +95,7 @@ export class FuncionarioRepository {
                 'usuarios.cpf',
                 'usuarios.telefone',
                 'usuarios.endereco',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'funcionarios.usuario_id')
             .where('usuarios.email', email)
@@ -105,6 +112,7 @@ export class FuncionarioRepository {
             funcao: funcionario.funcao,
             telefone: funcionario.telefone,
             endereco: funcionario.endereco,
+            email: funcionario.email,
         });
     }
 

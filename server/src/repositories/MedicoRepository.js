@@ -14,6 +14,7 @@ export class MedicoRepository {
                 'usuarios.cpf',
                 'usuarios.endereco',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'medicos.usuario_id');
 
@@ -24,6 +25,7 @@ export class MedicoRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+            email: medico.email,
         }));
     }
 
@@ -35,6 +37,7 @@ export class MedicoRepository {
                 'usuarios.cpf',
                 'usuarios.endereco',
                 'usuarios.telefone',
+                'usuarios.email',
             )
             .leftJoin('usuarios', 'usuarios.id', 'medicos.usuario_id')
             .where('medicos.id', id)
@@ -51,6 +54,7 @@ export class MedicoRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+            email: medico.email,
         });
     }
 
@@ -62,6 +66,7 @@ export class MedicoRepository {
                 'usuarios.cpf',
                 'usuarios.telefone',
                 'usuarios.endereco',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'medicos.usuario_id')
             .where('usuarios.cpf', cpf)
@@ -78,6 +83,7 @@ export class MedicoRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+            email: medico.email,
         });
     }
 
@@ -89,6 +95,7 @@ export class MedicoRepository {
                 'usuarios.cpf',
                 'usuarios.telefone',
                 'usuarios.endereco',
+                'usuarios.email',
             )
             .join('usuarios', 'usuarios.id', 'medicos.usuario_id')
             .where('usuarios.email', email)
@@ -105,6 +112,7 @@ export class MedicoRepository {
             crm: medico.crm,
             telefone: medico.telefone,
             endereco: medico.endereco,
+            email: medico.email,
         });
     }
 

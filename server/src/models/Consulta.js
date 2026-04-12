@@ -1,4 +1,11 @@
 export class Consulta {
+    static statusDePagamento = Object.freeze({
+        APAGAR : 1,
+        PAGOPARCIAL : 2,
+        ATRASADO : 3,
+        PAGO : 4,
+    });
+
     constructor({
         id,
         codigo,
@@ -9,6 +16,8 @@ export class Consulta {
         medicoNome,
         medicoCRM,
         descricaoSintomas,
+        temperatura,
+        peso,
         diagnosticoETratamentoSugerido,
         statusPagamento
     }) {

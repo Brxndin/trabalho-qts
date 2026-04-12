@@ -157,4 +157,18 @@ export class ConsultaRepository {
             return id;
         });
     }
+
+    async findMaiorCodigo() {
+        const dados = await knex('consultas')
+            .select('consultas.codigo')
+            .orderBy('codigo', 'DESC')
+            .limit(1)
+            .first();
+
+        if (!dados || !dados?.codigo) {
+            return 0;
+        }
+
+        return dados.codigo;
+    }
 }

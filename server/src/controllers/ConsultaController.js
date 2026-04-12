@@ -43,7 +43,6 @@ export class ConsultaController {
     store = async (req, res, next) => {
         try {
             const {
-                codigo,
                 pacienteCPF,
                 medicoCPF,
                 peso,
@@ -52,15 +51,6 @@ export class ConsultaController {
                 diagnosticoETratamentoSugerido,
                 statusPagamento
             } = req.body;
-
-            // to do
-            // gerar o código no momento de salvar o registro
-            // importante validar pra ser único
-            // verificar se deve ser uma hash, algo baseado em datas ou se é sequencial através do banco de dados 
-            
-            // if (!codigo) {
-            //     throw new CustomError('Código é obrigatório!', 400);
-            // }
 
             if (!medicoCPF) {
                 throw new CustomError('CPF do Médico é obrigatório!', 400);
@@ -114,9 +104,10 @@ export class ConsultaController {
             req.body.pacienteId = paciente.id;
             req.body.dataHoraAtendimento = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-            // to do
-            // criar função para gerar
-            // req.body.codigo = null;
+            const codigo = await this.consultaRepository.findMaiorCodigo();
+
+            // adiciona 1 pra aumentar sequência pois não tem regra no banco de dados
+            req.body.codigo = codigo + 1;
 
             const consultaId = await this.consultaRepository.create(req.body);
 

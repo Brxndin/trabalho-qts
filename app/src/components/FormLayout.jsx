@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../config/api";
+import { api } from "../config/api";
 import { useAuth } from "../auth/AuthContext";
 
 // aqui eu decidi fazer um form padrão pra não repetir o código tantas vezes

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../config/api";
+import { api } from "../config/api";
 import { useAuth } from "../auth/AuthContext";
 
 // aqui eu decidi fazer uma lista padrão pra não repetir o código tantas vezes

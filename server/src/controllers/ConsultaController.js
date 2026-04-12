@@ -98,13 +98,13 @@ export class ConsultaController {
                 throw new CustomError('O médico e o paciente não podem ser a mesma pessoa!', 400);
             }
 
-            const medico = this.consultaRepository.findMedicoByCPF(medicoCPF);
+            const medico = await this.consultaRepository.findMedicoByCPF(medicoCPF);
 
             if (isEmptyObject(medico)) {
                 throw new CustomError('O médico informado não foi encontrado!', 404);
             }
 
-            const paciente = this.consultaRepository.findPacienteByCPF(pacienteCPF);
+            const paciente = await this.consultaRepository.findPacienteByCPF(pacienteCPF);
 
             if (isEmptyObject(paciente)) {
                 throw new CustomError('O paciente informado não foi encontrado!', 404);

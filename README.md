@@ -27,7 +27,8 @@ Para usar o servidor, são necessários alguns passos para instalar as dependên
 - Instale as dependências do node usando o comando `npm i` e os softwares auxiliares por meio do Docker, rodando o comando `docker compose up -d`. O Docker instalará o MariaDB e o Mailpit (servidor de e-mail local usado para enviar e-mails no ambiente de desenvolvimento).
 - Rode as migrations para criar o banco de dados usando o comando `npx knex migrate:latest`.
 - Rode as seeder para adicionar o usuário inicial usando o comando `npx knex seed:run`.
-- Inicie o servidor usando o comando `npm start` ou `npm run dev` (para ambiente de desenvolvimento). 
+- Inicie o servidor usando o comando `npm start` ou `npm run dev` (para ambiente de desenvolvimento).
+- Para acessar o servidor de e-mail (Mailpit), acesse o endereço localhost:8025. Ele serve para simular o envio de e-mails de troca e definição de senhas.
 
 Após isso, se tudo deu certo, será mostrado o link de acesso ao servidor, que será definido conforme as configurações que você colocou no arquivo `.env`.
 

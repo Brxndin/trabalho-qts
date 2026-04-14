@@ -20,10 +20,10 @@ CREATE TABLE usuarios_tipos(
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
--- senha 12345678
+-- senha Senha.123
 INSERT INTO usuarios
 (nome, email, senha, cpf, endereco, telefone)
-VALUES ('Administrador', 'admin@ifrs.edu.br', '$2a$12$zpCIf21cwAq.kO1.4bpdEekHjIVKiXhY7GW/JV7ugEeuemPTX49HG', null, null, null);
+VALUES ('Administrador', 'admin@ifrs.edu.br', '$2b$12$fkCox86SvdMTzA7c6XDWLuIEBeq7fPa2ST3Uql8iY5sFkgD/9erXi', null, null, null);
 
 INSERT INTO usuarios_tipos
 (tipo, usuario_id)

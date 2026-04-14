@@ -41,3 +41,7 @@ Para usar o app, são necessários alguns passos para instalar as dependências 
 - Inicie o servidor usando o comando `npm start` ou `npm run dev` (para ambiente de desenvolvimento). 
 
 Após isso, se tudo deu certo, será mostrado o link de acesso ao servidor, que roda no port 5173, padrão do React.
+
+# Acesso
+
+O usuário inicial tem o e-mail `admin@ifrs.edu.br` e a senha `Senha.123`.

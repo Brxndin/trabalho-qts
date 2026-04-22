@@ -43,10 +43,14 @@ export class FuncionarioController {
 
             if (!nome) {
                 throw new CustomError('Nome é obrigatório!', 400);
+            } else if (nome.length > 200) {
+                throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
             }
-
+            
             if (!email) {
                 throw new CustomError('E-mail é obrigatório!', 400);
+            } else if (email.length > 200) {
+                throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
             }
 
             isEmailValido(email);
@@ -59,6 +63,8 @@ export class FuncionarioController {
 
             if (!funcao) {
                 throw new CustomError('Função é obrigatória!', 400);
+            } else if (funcao.length > 200) {
+                throw new CustomError('A função pode ter, no máximo, 200 caracteres!', 400);
             }
 
             // valida se já há funcionario com esse email e cpf
@@ -111,20 +117,32 @@ export class FuncionarioController {
 
             const { nome, email, cpf, funcao } = req.body;
 
-            if (nome !== undefined && nome === null) {
-                throw new CustomError('Nome é obrigatório!', 400);
+            if (nome !== undefined) {
+                if (nome === null) {
+                    throw new CustomError('Nome é obrigatório!', 400);
+                } else if (nome.length > 200) {
+                    throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
-            if (email !== undefined && email === null) {
-                throw new CustomError('E-mail é obrigatório!', 400);
+            if (email !== undefined) {
+                if (email === null) {
+                    throw new CustomError('E-mail é obrigatório!', 400);
+                } else if (email.length > 200) {
+                    throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
             if (cpf !== undefined && cpf === null) {
                 throw new CustomError('CPF é obrigatório!', 400);
             }
 
-            if (funcao !== undefined && funcao === null) {
-                throw new CustomError('Função é obrigatória!', 400);
+            if (funcao !== undefined) {
+                if (funcao === null) {
+                    throw new CustomError('Função é obrigatória!', 400);
+                } else if (funcao.length > 200) {
+                    throw new CustomError('A função pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
             let usuario = null;

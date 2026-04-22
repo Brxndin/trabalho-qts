@@ -108,18 +108,26 @@ export class ConsultaController {
 
             if (!peso) {
                 throw new CustomError('Peso é obrigatório!', 400);
+            } else if (peso.length > 3) {
+                throw new CustomError('O peso pode ter, no máximo, 3 dígitos!', 400);
             }
 
             if (!temperatura) {
                 throw new CustomError('Temperatura é obrigatória!', 400);
+            } else if (temperatura.length > 3) {
+                throw new CustomError('A temperatura pode ter, no máximo, 3 dígitos!', 400);
             }
 
             if (!descricaoSintomas) {
                 throw new CustomError('Descrição dos Sintomas é obrigatória!', 400);
+            } else if (descricaoSintomas.length > 200) {
+                throw new CustomError('A descrição dos sintomas pode ter, no máximo, 200 caracteres!', 400);
             }
 
             if (!diagnosticoETratamentoSugerido) {
                 throw new CustomError('Diagnóstico e Tratamento Sugerido são obrigatórios!', 400);
+            } else if (diagnosticoETratamentoSugerido.length > 200) {
+                throw new CustomError('O diagnóstico e tratamento sugerido podem ter, no máximo, 200 dígitos!', 400);
             }
 
             if (!statusPagamento) {

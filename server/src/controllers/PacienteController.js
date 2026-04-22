@@ -44,10 +44,14 @@ export class PacienteController {
 
             if (!nome) {
                 throw new CustomError('Nome é obrigatório!', 400);
+            } else if (nome.length > 200) {
+                throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
             }
 
             if (!email) {
                 throw new CustomError('E-mail é obrigatório!', 400);
+            } else if (email.length > 200) {
+                throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
             }
 
             isEmailValido(email);
@@ -126,34 +130,44 @@ export class PacienteController {
 
             const { nome, email, cpf, dataNascimento } = req.body;
 
-            if (nome !== undefined && nome === null) {
-                throw new CustomError('Nome é obrigatório!', 400);
+            if (nome !== undefined) {
+                if (nome === null) {
+                    throw new CustomError('Nome é obrigatório!', 400);
+                } else if (nome.length > 200) {
+                    throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
-            if (email !== undefined && email === null) {
-                throw new CustomError('E-mail é obrigatório!', 400);
+            if (email !== undefined) {
+                if (email === null) {
+                    throw new CustomError('E-mail é obrigatório!', 400);
+                } else if (email.length > 200) {
+                    throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
             if (cpf !== undefined && cpf === null) {
                 throw new CustomError('CPF é obrigatório!', 400);
             }
 
-            if (dataNascimento !== undefined && dataNascimento === null) {
-                throw new CustomError('Data de Nascimento é obrigatória!', 400);
-            }
-
-            let dataNascimentoTratada = dayjs(dataNascimento);
-
-            if (!dataNascimentoTratada.isValid()) {
-                throw new CustomError('A data de nascimento está num formato inválido!', 400);
-            }
-
-            if (dataNascimentoTratada.isAfter(dayjs())) {
-                throw new CustomError('A data de nascimento não pode ser uma data futura!', 400);
-            }
-
-            if (dayjs().diff(dataNascimentoTratada, 'year') > 130) {
-                throw new CustomError('A idade do paciente não pode ser superior a 130 anos!', 400);
+            if (dataNascimento !== undefined) {
+                if (dataNascimento === null) {
+                    throw new CustomError('Data de Nascimento é obrigatória!', 400);
+                } else {
+                    let dataNascimentoTratada = dayjs(dataNascimento);
+        
+                    if (!dataNascimentoTratada.isValid()) {
+                        throw new CustomError('A data de nascimento está num formato inválido!', 400);
+                    }
+        
+                    if (dataNascimentoTratada.isAfter(dayjs())) {
+                        throw new CustomError('A data de nascimento não pode ser uma data futura!', 400);
+                    }
+        
+                    if (dayjs().diff(dataNascimentoTratada, 'year') > 130) {
+                        throw new CustomError('A idade do paciente não pode ser superior a 130 anos!', 400);
+                    }
+                }
             }
 
             let usuario = null;

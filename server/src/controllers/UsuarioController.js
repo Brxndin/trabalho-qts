@@ -43,10 +43,14 @@ export class UsuarioController {
 
             if (!nome) {
                 throw new CustomError('Nome é obrigatório!', 400);
+            } else if (nome.length > 200) {
+                throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
             }
 
             if (!email) {
                 throw new CustomError('E-mail é obrigatório!', 400);
+            } else if (email.length > 200) {
+                throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
             }
 
             isEmailValido(email);
@@ -92,12 +96,20 @@ export class UsuarioController {
 
             const { nome, email, cpf } = req.body;
 
-            if (nome !== undefined && nome === null) {
-                throw new CustomError('Nome é obrigatório!', 400);
+            if (nome !== undefined) {
+                if (nome === null) {
+                    throw new CustomError('Nome é obrigatório!', 400);
+                } else if (nome.length > 200) {
+                    throw new CustomError('O nome pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
-            if (email !== undefined && email === null) {
-                throw new CustomError('E-mail é obrigatório!', 400);
+            if (email !== undefined) {
+                if (email === null) {
+                    throw new CustomError('E-mail é obrigatório!', 400);
+                } else if (email.length > 200) {
+                    throw new CustomError('O e-mail pode ter, no máximo, 200 caracteres!', 400);
+                }
             }
 
             if (email) {

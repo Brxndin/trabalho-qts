@@ -32,6 +32,17 @@ export function isEmptyObject(object) {
     return object && Object.keys(object).length === 0;
 }
 
+export function isNumber(valor) {
+    // se for string vazia
+    if (typeof valor === 'string' && valor.trim().length === 0) {
+        return false;
+    }
+
+    const numero = Number(valor);
+    
+    return Number.isFinite(numero);
+}
+
 export function isSenhaValida(senha) {
     const padraoSenha  = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-])[a-zA-Z\d@$!%*?&._-]{7,}$/;
 

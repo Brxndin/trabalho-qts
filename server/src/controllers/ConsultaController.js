@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import CustomError from '../helpers/customError.js';
 import customSuccess from '../helpers/customSuccess.js';
-import { isCPFValido } from '../helpers/customValidators.js';
+import { isCPFValido, isNumber } from '../helpers/customValidators.js';
 
 export class ConsultaController {
     constructor(consultaRepository) {
@@ -108,14 +108,26 @@ export class ConsultaController {
 
             if (!peso) {
                 throw new CustomError('Peso é obrigatório!', 400);
-            } else if (peso.length > 3) {
-                throw new CustomError('O peso pode ter, no máximo, 3 dígitos!', 400);
+            } else {
+                if (peso.length > 5) {
+                    throw new CustomError('O peso pode ter, no máximo, 5 dígitos!', 400);
+                }
+
+                if (!isNumber(peso)) {
+                    throw new CustomError('O peso deve ser um número válido! Caso tenha casas decimais, separe usando ponto (".").', 400);
+                }
             }
 
             if (!temperatura) {
                 throw new CustomError('Temperatura é obrigatória!', 400);
-            } else if (temperatura.length > 3) {
-                throw new CustomError('A temperatura pode ter, no máximo, 3 dígitos!', 400);
+            } else {
+                if (temperatura.length > 5) {
+                    throw new CustomError('A temperatura pode ter, no máximo, 5 dígitos!', 400);
+                }
+
+                if (!isNumber(temperatura)) {
+                    throw new CustomError('A temperatura deve ser um número válido! Caso tenha casas decimais, separe usando ponto (".").', 400);
+                }
             }
 
             if (!descricaoSintomas) {

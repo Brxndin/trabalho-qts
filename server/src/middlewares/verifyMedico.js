@@ -4,8 +4,8 @@ import { Usuario } from '../models/Usuario.js';
 function verifyMedico(req, res, next)
 {
     try {
-        // valida se o usuário logado é um adm
-        if (!req.userPayload?.role.includes(Usuario.tipos.MEDICO)) {
+        // valida se o usuário logado é um médico
+        if (!req.userPayload?.role.includes(Usuario.tiposUsuario.MEDICO)) {
             throw new CustomError('Somente médicos têm acesso a esse recurso!', 403);
         }
 

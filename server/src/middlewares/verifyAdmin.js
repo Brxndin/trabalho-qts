@@ -5,7 +5,7 @@ function verifyAdmin(req, res, next)
 {
     try {
         // valida se o usuário logado é um adm
-        if (!req.userPayload?.role.includes(Usuario.tipos.ADM)) {
+        if (!req.userPayload?.role.includes(Usuario.tiposUsuario.ADM)) {
             throw new CustomError('Somente administradores têm acesso a esse recurso!', 403);
         }
 

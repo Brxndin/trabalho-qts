@@ -90,7 +90,7 @@ export class UsuarioController {
             }
 
             // rotas diretas de usuários servem somente para administradores
-            if (!usuario.tipos.includes(Usuario.tipos.ADM)) {
+            if (!usuario.tipos.includes(Usuario.tiposUsuario.ADM)) {
                 throw new CustomError('Não é possível editar usuários que não são administradores!', 400);
             }
 
@@ -170,7 +170,7 @@ export class UsuarioController {
                 throw new CustomError('O usuário informado não existe!', 404);
             }
 
-            if (!usuario.tipos.includes(Usuario.tipos.ADM)) {
+            if (!usuario.tipos.includes(Usuario.tiposUsuario.ADM)) {
                 throw new CustomError('Não é possível excluir usuários que não são administradores!', 400);
             }
 

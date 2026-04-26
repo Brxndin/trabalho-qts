@@ -206,7 +206,7 @@ export class FuncionarioRepository {
                 await trx('usuarios_tipos')
                     .insert({
                         usuario_id: usuarioId,
-                        tipo: Usuario.tipos.FUNCIONARIO,
+                        tipo: Usuario.tiposUsuario.FUNCIONARIO,
                     });
 
                 // token pra recuperação de senha ou primeiro acesso
@@ -296,7 +296,7 @@ export class FuncionarioRepository {
                             .from('funcionarios')
                             .where('funcionarios.id', id)
                     })
-                    .where('usuarios_tipos.tipo', Usuario.tipos.FUNCIONARIO)
+                    .where('usuarios_tipos.tipo', Usuario.tiposUsuario.FUNCIONARIO)
                     .delete();
 
                 linhasAfetadas = await trx('funcionarios')

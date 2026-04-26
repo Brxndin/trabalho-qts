@@ -1,5 +1,5 @@
 export class Usuario {
-    static tipos = Object.freeze({
+    static tiposUsuario = Object.freeze({
         ADM : 1,
         MEDICO : 2,
         PACIENTE : 3,

@@ -125,7 +125,7 @@ export class UsuarioRepository {
             await trx('usuarios_tipos')
                 .insert({
                     usuario_id: usuarioId,
-                    tipo: Usuario.tipos.ADM
+                    tipo: Usuario.tiposUsuario.ADM
                 });
 
             // token pra recuperação de senha ou primeiro acesso

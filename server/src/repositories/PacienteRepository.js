@@ -197,7 +197,7 @@ export class PacienteRepository {
                 await trx('usuarios_tipos')
                     .insert({
                         usuario_id: usuarioId,
-                        tipo: Usuario.tipos.PACIENTE,
+                        tipo: Usuario.tiposUsuario.PACIENTE,
                     });
 
                 // token pra recuperação de senha ou primeiro acesso

@@ -11,7 +11,7 @@ export class ConsultaController {
     index = async (req, res, next) => {
         try {
             // o médico logado só pode ver as próprias consultas
-            const consultas = await this.consultaRepository.findAll(req.userPayload.id);
+            const consultas = await this.consultaRepository.findAll(req.userPayload.id, req.userPayload.role);
 
             return customSuccess(res, {
                 data: consultas

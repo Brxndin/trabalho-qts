@@ -3,9 +3,10 @@ import knex from '../config/knex.js';
 import { Consulta } from '../models/Consulta.js';
 import { Medico } from '../models/Medico.js';
 import { Paciente } from '../models/Paciente.js';
+import { Usuario } from '../models/Usuario.js';
 
 export class ConsultaRepository {
-    async findAll(idUsuario = null) {
+    async findAll(idUsuario = null, tipo = [Usuario.tiposUsuario.MEDICO]) {
         const consultas = await knex('consultas')
             .select(
                 'consultas.*',
@@ -21,8 +22,15 @@ export class ConsultaRepository {
             .join('usuarios as usuarios_pacientes', 'usuarios_pacientes.id', 'pacientes.usuario_id')
             .modify((query) => {
                 if (idUsuario) {
-                    query
-                        .where('usuarios_medicos.id', idUsuario);
+                    if (tipos.includes(Usuario.tiposUsuario.MEDICO)) {
+                        query
+                            .where('usuarios_medicos.id', idUsuario);
+                    }
+    
+                    if (tipos.includes(Usuario.tiposUsuario.PACIENTE)) {
+                        query
+                            .where('usuarios_pacientes.id', idUsuario);
+                    }
                 }
             });
 

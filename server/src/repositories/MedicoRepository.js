@@ -239,7 +239,7 @@ export class MedicoRepository {
                 await trx('usuarios_tipos')
                     .insert({
                         usuario_id: usuarioId,
-                        tipo: Usuario.tipos.MEDICO,
+                        tipo: Usuario.tiposUsuario.MEDICO,
                     });
 
                 // token pra recuperação de senha ou primeiro acesso
@@ -334,7 +334,7 @@ export class MedicoRepository {
                             .from('medicos')
                             .where('medicos.id', id)
                     })
-                    .where('usuarios_tipos.tipo', Usuario.tipos.FUNCIONARIO)
+                    .where('usuarios_tipos.tipo', Usuario.tiposUsuario.FUNCIONARIO)
                     .delete();
 
                 linhasAfetadas = await trx('medicos')

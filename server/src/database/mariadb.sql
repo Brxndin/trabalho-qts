@@ -69,8 +69,8 @@ CREATE TABLE consultas(
     paciente_id int NOT NULL,
     medico_id int NOT NULL,
     descricao_sintomas varchar(200) NOT NULL,
-    temperatura int NOT NULL,
-    peso int NOT NULL,
+    temperatura decimal(5, 2) NOT NULL,
+    peso decimal(5, 2) NOT NULL,
     diagnostico_e_tratamento_sugerido text NOT NULL,
     status_pagamento int NOT NULL,
 

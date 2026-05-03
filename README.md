@@ -25,6 +25,10 @@ Para usar o servidor, são necessários alguns passos para instalar as dependên
 - Entre na pasta usando `cd server`.
 - Copie o arquivo `.env.example` e crie o arquivo `.env`. Nele ficam as variáveis de ambiente usadas no projeto, que devem ser modificadas para poder usar o sistema. Recomendo que, para ambiente de desenvolvimento, os hosts sejam todos `localhost` e que as portas sigam esse padrão: PORT: 8080, DB_PORT: 3306, MAIL_PORT: 1025, FRONT_PORT: 5173 (padrão do React).
 - Instale as dependências do node usando o comando `npm i` e os softwares auxiliares por meio do Docker, rodando o comando `docker compose up -d`. O Docker instalará o MariaDB e o Mailpit (servidor de e-mail local usado para enviar e-mails no ambiente de desenvolvimento).
+- Se conecte ao MariaDB com o software de sua escolha (como, por exemplo, Beekeeper Studio) e rode o comando abaixo (conforme arquivo de modelagem do banco de dados). Isso é necessário pois iremos usar o Knex para as querys, migrations e seeds, porém ele não cria a database, então ela já deve existir antes.
+ ```sql
+ CREATE DATABASE clinica_cardiologia;
+ ```
 - Rode as migrations para criar o banco de dados usando o comando `npx knex migrate:latest`.
 - Rode as seeder para adicionar o usuário inicial usando o comando `npx knex seed:run`.
 - Inicie o servidor usando o comando `npm start` ou `npm run dev` (para ambiente de desenvolvimento).

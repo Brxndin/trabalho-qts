@@ -20,4 +20,4 @@ function verifyMedicoOrPaciente(req, res, next)
     }
 }
 
-export default verifyMedico;
+export default verifyMedicoOrPaciente;

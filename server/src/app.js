@@ -26,14 +26,18 @@ app.use(express.json());
 // limita o número de requisições por IP
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.',
+    max: 15,
+    message: {
+        message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.'
+    },
 });
 
 const normalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 500,
-    message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.',
+    message: {
+        message: 'Muitas requisições realizadas. Tente novamente em 15 minutos.'
+    },
 });
 
 app.use('/auth', authLimiter, authRoutes);

@@ -20,6 +20,20 @@ import DefinirSenhaForm from './pages/DefinirSenhaForm';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
 
+function ForbiddenPage() {
+  return (
+    <section className="forbidden-page">
+      <div className="forbidden-card">
+        <div className="forbidden-icon" aria-hidden="true">🔒</div>
+        <h1 className="forbidden-title">Acesso negado</h1>
+        <p className="forbidden-text">
+          Você não tem permissão para acessar essa tela.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export const router = createBrowserRouter([
   {
     path: '/', 
@@ -90,7 +104,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'forbidden',
-        element: <h1>Acesso negado: você não tem permissão para acessar essa tela!</h1>,
+        element: <ForbiddenPage/>,
       },
       {
         path: '*',

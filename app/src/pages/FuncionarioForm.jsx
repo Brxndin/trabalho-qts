@@ -15,7 +15,10 @@ export default function FuncionarioForm() {
           { label: "CPF", name: "cpf", type: "text", placeholder: "Informe o CPF", required: true },
           { label: "Função", name: "funcao", type: "text", placeholder: "Informe a função", required: true },
           { label: "Telefone", name: "telefone", type: "text", placeholder: "Informe o telefone" },
-          { label: "Endereço", name: "endereco", type: "text", placeholder: "Informe o endereço" },
+          { label: "Endereço", name: "endereco", type: "text", placeholder: "Rua ou avenida", required: true },
+          { label: "Número", name: "numero", type: "text", placeholder: "Número", required: true },
+          { label: "Bairro", name: "bairro", type: "text", placeholder: "Bairro", required: true },
+          { label: "CEP", name: "cep", type: "text", placeholder: "CEP", required: true },
           { label: "E-mail", name: "email", type: "email", placeholder: "Informe o e-mail", required: true },
         ]}
         submitButtonText={id ? 'Atualizar' : 'Cadastrar'}

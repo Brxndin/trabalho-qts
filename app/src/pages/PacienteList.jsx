@@ -13,15 +13,15 @@ export default function PacienteList() {
           { column: "CPF", nameInForm: "cpf" },
           { column: "Telefone", nameInForm: "telefone" },
           { column: "Data de Nascimento", nameInForm: "dataNascimento" },
+          { column: "E-mail", nameInForm: "email" },
         ]}
         emptyMessage={"Não há nenhum paciente cadastrado!"}
         linkShow={"/pacientes/form"}
         linkDelete={"/pacientes"}
         linkGetData={"/pacientes"}
         linkNew={"/pacientes/form"}
-        // aqui define que somente funcionários podem cadastrar e editar
         useAddNew={authState?.user?.role.includes(4)}
-        useActions={false}
+        useActions={authState?.user?.role.includes(4)}
         useUpdate={authState?.user?.role.includes(4)}
         authPermission={true}
         adminPermission={false}

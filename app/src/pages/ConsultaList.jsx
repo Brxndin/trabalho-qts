@@ -7,12 +7,12 @@ export default function ConsultaList() {
   return (
     <div>
       <ListLayout
-        title={'Listagem de Consultas'}
+        title={"Listagem de Consultas"}
         columnsAndNames={[
           { column: "Código", nameInForm: "codigo" },
           { column: "Nome do Médico", nameInForm: "medicoNome" },
           { column: "CPF do Médico", nameInForm: "medicoCPF" },
-          { column: "CRM do Médico", nameInForm: "crm" },
+          { column: "CRM do Médico", nameInForm: "medicoCRM" },
           { column: "Nome do Paciente", nameInForm: "pacienteNome" },
           { column: "CPF do Paciente", nameInForm: "pacienteCPF" },
           { column: "Peso", nameInForm: "peso" },
@@ -27,7 +27,6 @@ export default function ConsultaList() {
         linkDelete={"/consultas"}
         linkGetData={"/consultas"}
         linkNew={"/consultas/form"}
-        // aqui define que somente médicos podem cadastrar
         useAddNew={authState?.user?.role.includes(2)}
         useActions={false}
         useUpdate={false}

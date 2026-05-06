@@ -1,20 +1,24 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import AxiosInterceptor from './AxiosInterceptor';
 
 export default function Layout() {
+  const location = useLocation();
+  const isAuthPage = ['/login', '/recuperar-senha', '/definir-senha'].includes(location.pathname);
+
   return (
     <AxiosInterceptor>
-      <Header/> 
-      
-      <main>
-        <Outlet /> 
-      </main>
-
-      <footer>
-        <p>&copy; 2026 Clínica de Cardiologia | Todos os direitos reservados.</p>
-        <p>Feito por Brandon, Brenda, Gian, Mylena e Pedro Sperotto</p>
-      </footer>
+      <div className="app-shell">
+        <Header />
+        <main className={isAuthPage ? 'main-auth' : 'main-default'}>
+          <Outlet />
+        </main>
+        {!isAuthPage && (
+          <footer className="site-footer">
+            <p>&copy; 2026 Cardio Clínica</p>
+          </footer>
+        )}
+      </div>
     </AxiosInterceptor>
   );
 }

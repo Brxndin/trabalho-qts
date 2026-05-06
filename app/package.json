@@ -14,7 +14,10 @@
     "dayjs": "^1.11.20",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.3"
+    "react-router-dom": "^7.9.3",
+    "react-toastify": "^11.1.0",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

@@ -44,6 +44,11 @@ export class AuthController {
                 throw new CustomError('Dados incorretos!', 400);
             }
 
+            // zera o limiter
+            if (req.limiter && req.rateLimit) {
+                await req.limiter.resetKey(req.rateLimit.key);
+            }
+
             // aqui chamo de payload mas é o que vai ser transformado em token
             const payload = {
                 id: usuario.id,

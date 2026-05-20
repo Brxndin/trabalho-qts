@@ -212,35 +212,6 @@ export default function FormLayout({
           error?.message ||
           'Ocorreu um erro ao enviar o formulário.';
 
-        if (linkStore === '/auth/login') {
-          const mensagemLower = String(mensagemErro).toLowerCase();
-
-          if (
-            mensagemLower.includes('primeiro acesso') ||
-            mensagemLower.includes('recuperar senha') ||
-            mensagemLower.includes('ainda não fez') ||
-            mensagemLower.includes('ainda nao fez')
-          ) {
-            mensagemErro =
-              'O usuário ainda não fez o primeiro acesso! Verifique o e-mail ou clique em "Recuperar Senha".';
-          } else if (
-            mensagemLower.includes('dados incorretos') ||
-            mensagemLower.includes('senha') ||
-            mensagemLower.includes('incorretos')
-          ) {
-            mensagemErro = 'Dados incorretos!';
-          } else if (
-            mensagemLower.includes('usuário') ||
-            mensagemLower.includes('usuario') ||
-            mensagemLower.includes('não encontrado') ||
-            mensagemLower.includes('nao encontrado') ||
-            mensagemLower.includes('não existe') ||
-            mensagemLower.includes('nao existe')
-          ) {
-            mensagemErro = 'Usuário não existente.';
-          }
-        }
-
         setErro(mensagemErro);
         toast.error(mensagemErro);
       });

@@ -201,6 +201,10 @@ export default function FormLayout({
 
         if (!id) {
           setData({});
+
+          if (initialSetDataFunction) {
+            initialSetDataFunction(api, setData);
+          }
         }
       })
       .catch((error) => {

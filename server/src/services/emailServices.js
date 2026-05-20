@@ -39,9 +39,9 @@ export async function enviarEmailDefinicaoSenha(email, token, tipoEmail = 'regis
             <p>Para criar sua senha de acesso, clique no link abaixo:</p>
             <a href="${link}" style="color: #007bff; font-weight: bold; text-decoration: none;">Definir minha senha</a>
             <br><br>
-            <small>Atenção: Este link expira em 24 horas a partir da data de envio do e-mail. Além disso, ele não será mais válido se forem feitas novas tentativas de recuperação da senha.</small>
+            <small>Atenção: Este link expira em 24 horas a partir da data de envio do e-mail. Além disso, ele não será mais válido se forem feitas novas tentativas de recuperação da senha. Para mudar a senha, é preciso fazer logout da sessão atual.</small>
         `,
     });
 
-    return 'E-mail para definir a senha enviado! Verifique em http://localhost:8025';
+    return 'E-mail para definir a senha enviado! Verifique em http://localhost:8025. Para mudar a senha, é preciso fazer logout da sessão atual.';
 }

@@ -34,7 +34,7 @@ export class AuthController {
             // a senha é salva nula ao cadastrar o usuário
             // assim, é necessário acessar o link que chega no e-mail e definir a senha
             if (!usuario.senha) {
-                throw new CustomError('O usuário ainda não fez o primeiro acesso! Verifique o e-mail ou clique em "Recuperar Senha".');
+                throw new CustomError('O usuário ainda não fez o primeiro acesso! Verifique o e-mail ou clique em "Recuperar Senha".', 400);
             }
 
             // valida a senha criptografada
